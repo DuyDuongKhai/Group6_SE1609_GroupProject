@@ -1,9 +1,10 @@
-﻿using BusinessObject.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
+using BusinessObject.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess
 {
@@ -16,7 +17,9 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    listGroups = context.Groups.ToList();
+                    listGroups = context.Groups
+                       .Include(x=>x.GroupAdmin) 
+                       .ToList();
                 }
             }
             catch (Exception ex)
@@ -42,6 +45,9 @@ namespace DataAccess
             }
             return c;
         }
+
+
+
 
         public static void SaveGroup(Group c)
         {
