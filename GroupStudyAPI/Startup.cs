@@ -1,11 +1,14 @@
 using System;
+using AutoMapper;
 using System.Linq;
 using Repositories;
 using Newtonsoft.Json;
 using System.Text.Json;
+using BusinessObject.Models;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using GroupStudyAPI.AutoMapper;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -41,6 +44,21 @@ namespace GroupStudyAPI
             services.AddMvc(option => option.EnableEndpointRouting = false)
                         .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                         .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
+            services.AddScoped<IJoinRequestRepository, JoinRequestRepository>();
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+
+
 
         }
 

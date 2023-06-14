@@ -1,10 +1,10 @@
-﻿using BusinessObject.Models;
+﻿using System;
 using DataAccess;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BusinessObject.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Repositories
 {
@@ -23,6 +23,8 @@ namespace Repositories
 
         public List<Group> GetGroups() => GroupDAO.GetGroups();
         public List<JoinRequest> GetJoinRequests() => JoinRequestDAO.GetJoinRequests();
+        public  List<JoinRequest> ListJoinRequestByGroupId(int groupId) => JoinRequestDAO.ListJoinRequestByGroupId(groupId);
+        public int GetRequestId(int groupId, int memberId)=> JoinRequestDAO.GetRequestId(groupId, memberId);
 
     }
 }

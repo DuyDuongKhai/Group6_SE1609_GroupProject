@@ -53,10 +53,19 @@ namespace DataAccess
         {
             try
             {
+
                 using (var context = new GroupStudyContext())
                 {
-                    context.Groups.Add(c);
-                    context.SaveChanges();
+                    var user = context.Users.SingleOrDefault(x => x.UserId == c.GroupAdminId);
+                    if (user.Role.Equals("Group Admin"))
+                    {
+                        context.Groups.Add(c);
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new Exception("Only Group Admin can create group");
+                    }
                 }
             }
             catch (Exception ex)

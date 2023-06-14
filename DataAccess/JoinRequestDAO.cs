@@ -1,9 +1,10 @@
-﻿using BusinessObject.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
+using BusinessObject.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess
 {
@@ -88,6 +89,48 @@ namespace DataAccess
             {
                 throw new Exception(e.Message);
             }
+        }
+
+        public static List<JoinRequest> ListJoinRequestByGroupId(int groupId)
+        {
+            List<JoinRequest> list= new List<JoinRequest>();
+            try
+            {
+                using (var context = new GroupStudyContext())
+                {
+                    list = context.JoinRequests
+                        .Include(x=>x.User)
+                        .Include(x=>x.Group)
+                        .Where(x=>x.GroupId==groupId).ToList();
+                    if(list.Count()==0)
+                    {
+                        throw new Exception("No request in that group");
+                    }
+
+                }
+            }catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return list;
+        }
+        public static int GetRequestId(int groupId, int memberId)
+        {
+            int requestId = 0;
+            try
+            {
+                using (var context = new GroupStudyContext())
+                {
+                     requestId = context.JoinRequests
+               .Where(r => r.GroupId == groupId && r.UserId == memberId)
+               .Select(r => r.RequestId)
+               .FirstOrDefault();
+                }
+            }catch(Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return requestId;
         }
     }
 }
