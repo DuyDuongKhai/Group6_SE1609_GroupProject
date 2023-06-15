@@ -12,50 +12,48 @@ namespace GroupStudyAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class GroupsController : ControllerBase
     {
+        private IGroupRepository _groupRepository = new GroupRepository();
 
 
-        private IUserRepository _userRepository = new UserRepository();
-
-
-        public UsersController()
+        public GroupsController()
         {
 
         }
 
-        // GET: api/Users
+        // GET: api/Groups
         [HttpGet]
-        public ActionResult<IEnumerable<User>> GetUsers()
+        public ActionResult<IEnumerable<Group>> GetGroups()
         {
-            return _userRepository.GetUsers();
+            return _groupRepository.GetGroups();
         }
 
-        // GET: api/Users/5
+        // GET: api/Groups/5
         [HttpGet("{id}")]
-        public ActionResult<User> GetUser(int id)
+        public ActionResult<Group> GetGroup(int id)
         {
-            var user = _userRepository.GetUserById(id);
+            var group = _groupRepository.GetGroupById(id);
 
-            if (user == null)
+            if (group == null)
             {
                 return NotFound();
             }
 
-            return user;
+            return group;
         }
 
-        // PUT: api/Users/5
+        // PUT: api/Groups/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public IActionResult PutUser(int id, User user)
+        public IActionResult PutGroup(int id, Group group)
         {
-            if (id != user.UserId)
+            if (id != group.GroupId)
             {
                 return BadRequest();
             }
 
-            if (!UserExists(id))
+            if (!GroupExists(id))
             {
                 return NotFound();
             }
@@ -64,7 +62,7 @@ namespace GroupStudyAPI.Controllers
 
                 try
                 {
-                    _userRepository.UpdateUser(user);
+                    _groupRepository.UpdateGroup(group);
                 }
                 catch (Exception ex)
                 {
@@ -75,12 +73,12 @@ namespace GroupStudyAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Users
+        // POST: api/Groups
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public ActionResult<User> PostUser(User user)
+        public ActionResult<Group> PostGroup(Group group)
         {
-            if (UserExists(user.UserId))
+            if (GroupExists(group.GroupId))
             {
                 return Conflict();
             }
@@ -88,34 +86,34 @@ namespace GroupStudyAPI.Controllers
             {
                 try
                 {
-                    _userRepository.SaveUser(user);
+                    _groupRepository.SaveGroup(group);
                 }
                 catch (Exception ex)
                 {
                     return BadRequest(ex.Message);
                 }
             }
-            return CreatedAtAction("GetCustomer", new { id = user.UserId }, user);
+            return CreatedAtAction("GetCustomer", new { id = group.GroupId }, group);
         }
 
-        // DELETE: api/Users/5
+        // DELETE: api/Groups/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(int id)
+        public IActionResult DeleteGroup(int id)
         {
-            var user = _userRepository.GetUserById(id);
-            if (user == null)
+            var group = _groupRepository.GetGroupById(id);
+            if (group == null)
             {
                 return NotFound();
             }
 
-            _userRepository.DeleteUser(user);
+            _groupRepository.DeleteGroup(group);
 
             return NoContent();
         }
 
-        private bool UserExists(int id)
+        private bool GroupExists(int id)
         {
-            return _userRepository.GetUserById(id) != null;
+            return _groupRepository.GetGroupById(id) != null;
         }
     }
 }
