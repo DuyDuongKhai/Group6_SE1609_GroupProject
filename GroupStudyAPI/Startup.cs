@@ -1,37 +1,37 @@
-using GroupStudyAPI.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System;
 using System;
 using AutoMapper;
 using System.Linq;
+using System.Linq;
+using System.Text;
+using Repositories;
 using Repositories;
 using Newtonsoft.Json;
 using System.Text.Json;
+using GroupStudyAPI.Models;
 using BusinessObject.Models;
+using System.Threading.Tasks;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using GroupStudyAPI.AutoMapper;
+using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System.Text.Json.Serialization;
+using Microsoft.IdentityModel.Tokens;
+using Swashbuckle.AspNetCore.Filters;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using Repositories;
-using Swashbuckle.AspNetCore.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace GroupStudyAPI
 {
@@ -98,11 +98,7 @@ namespace GroupStudyAPI
                         .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                         .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IGroupRepository, GroupRepository>();
-            services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
-            services.AddScoped<IJoinRequestRepository, JoinRequestRepository>();
-            services.AddScoped<IPostRepository, PostRepository>();
+            
 
             var mapperConfig = new MapperConfiguration(mc =>
             {
