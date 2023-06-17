@@ -1,10 +1,10 @@
-﻿using BusinessObject.Models;
+﻿using System;
 using DataAccess;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BusinessObject.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Repositories
 {
@@ -22,5 +22,9 @@ namespace Repositories
         public GroupMember GetGroupMemberById(int id) => GroupMemberDAO.FindGroupMemberById(id);
 
         public List<GroupMember> GetGroupMembers() => GroupMemberDAO.GetGroupMembers();
+    
+        public List<User> GetMemberFromGroup(int groupId)=> GroupMemberDAO.GetMemberFromGroup(groupId);
+        public void CreateGroupMemberAdmin(GroupMember c) => GroupMemberDAO.CreateGroupMemberAdmin(c);
+
     }
 }

@@ -1,9 +1,11 @@
-﻿using BusinessObject.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
+using BusinessObject.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 
 namespace DataAccess
 {
@@ -41,6 +43,29 @@ namespace DataAccess
                 throw new Exception(ex.Message);
             }
             return c;
+        }
+
+        public static List<Post> GetPostByGroupId(int groupId)
+        {
+            List<Post> posts = new List<Post>();
+            try
+            {
+                using (var context= new GroupStudyContext())
+                {
+                    posts = context.Posts
+                        .Include(x=>x.Group)
+                        .Include(x=>x.User)
+                        .Where(x=>x.GroupId== groupId).ToList();
+                }
+                if(posts.Count()==0)
+                {
+                    return new List<Post>();
+                }
+            }catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return posts;
         }
 
         public static void SavePost(Post c)

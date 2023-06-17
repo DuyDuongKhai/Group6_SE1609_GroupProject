@@ -1,9 +1,10 @@
-﻿using BusinessObject.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
+using BusinessObject.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess
 {
@@ -16,7 +17,9 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    listGroups = context.Groups.ToList();
+                    listGroups = context.Groups
+                       .Include(x=>x.GroupAdmin) 
+                       .ToList();
                 }
             }
             catch (Exception ex)
@@ -43,14 +46,26 @@ namespace DataAccess
             return c;
         }
 
+
+
+
         public static void SaveGroup(Group c)
         {
             try
             {
+
                 using (var context = new GroupStudyContext())
                 {
-                    context.Groups.Add(c);
-                    context.SaveChanges();
+                    var user = context.Users.SingleOrDefault(x => x.UserId == c.GroupAdminId);
+                    if (user.Role.Equals("Group Admin"))
+                    {
+                        context.Groups.Add(c);
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new Exception("Only Group Admin can create group");
+                    }
                 }
             }
             catch (Exception ex)

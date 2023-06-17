@@ -1,10 +1,10 @@
-﻿using BusinessObject.Models;
+﻿using System;
 using DataAccess;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BusinessObject.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Repositories
 {
@@ -21,5 +21,7 @@ namespace Repositories
         public List<Group> GetGroups() => GroupDAO.GetGroups();
         public List<User> GetUsers() => UserDAO.GetUsers();
         public List<Post> GetPosts() => PostDAO.GetPosts();
+        public List<Post> GetPostByGroupId(int groupId) => PostDAO.GetPostByGroupId(groupId);
+
     }
 }

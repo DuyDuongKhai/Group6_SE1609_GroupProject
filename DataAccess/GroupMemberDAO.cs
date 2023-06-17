@@ -1,9 +1,9 @@
-﻿using BusinessObject.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
+using BusinessObject.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace DataAccess
 {
@@ -43,14 +43,71 @@ namespace DataAccess
             return c;
         }
 
+        public static List<User> GetMemberFromGroup(int Id)
+        {
+            List<User> list=new List<User>();
+            var group = FindGroupMemberById(Id);
+            try
+            {
+                using (var context = new GroupStudyContext())
+                {
+                    list = context.GroupMembers
+                .Where(gm => gm.GroupId == group.GroupId && gm.User != null)
+                .Select(gm => gm.User)
+                .ToList();
+
+                }
+                if(list.Count==0)
+                {
+                    throw new Exception($"No user is in the {group.Group.GroupName}");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return list;
+        }
+        
+
         public static void SaveGroupMember(GroupMember c)
         {
             try
             {
                 using (var context = new GroupStudyContext())
                 {
-                    context.GroupMembers.Add(c);
-                    context.SaveChanges();
+                    if (context.GroupMembers.SingleOrDefault(x => x.UserId == c.UserId) == null)
+                    {
+                        context.GroupMembers.Add(c);
+                        context.SaveChanges();
+                    }else
+                    {
+                        throw new Exception("Already had that member");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public static void CreateGroupMemberAdmin(GroupMember c)
+        {
+            try
+            {
+
+                using (var context = new GroupStudyContext())
+                {
+                    var user = context.Users.SingleOrDefault(x=>x.UserId== c.UserId);
+                    if (user.Role.Equals("Group Admin"))
+                    {
+                        context.GroupMembers.Add(c);
+                        context.SaveChanges();
+                    }
+                    else
+                    {
+                        throw new Exception("Only Group Admin can create group");
+                    }
                 }
             }
             catch (Exception ex)
@@ -79,14 +136,14 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    var c1 = context.GroupMembers.SingleOrDefault(u => u.GroupMemberId == c.GroupMemberId);
+                    var c1 = context.GroupMembers.SingleOrDefault(u => u.GroupId == c.GroupId&& u.UserId == c.UserId);
                     context.GroupMembers.Remove(c1);
                     context.SaveChanges();
                 }
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw new Exception("User does not exist in the group");
             }
         }
     }
