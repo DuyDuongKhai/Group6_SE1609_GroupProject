@@ -7,9 +7,9 @@
 - Admin
 # Functions of Actors
 # Guest:
-- Register: Register a new account with email verification.
+- Register
 # User:
-- Login (Google): Authenticate using Google login.
+- Login 
 -   Logout: Log out of the system.
 - Change password: Update the user's password.
 - Manage profile: View and update the user's profile information.
