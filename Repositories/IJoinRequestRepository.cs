@@ -9,10 +9,11 @@ namespace Repositories
 {
     public interface IJoinRequestRepository
     {
-        void SaveJoinRequest(JoinRequest c);
+        
         JoinRequest GetJoinRequestById(int id);
         void DeleteJoinRequest(JoinRequest c);
         void UpdateJoinRequest(JoinRequest c);
+        void SaveJoinRequest(JoinRequest joinRequest);
 
         List<User> GetUsers();
         List<Group> GetGroups();

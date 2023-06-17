@@ -42,6 +42,24 @@ namespace DataAccess
             }
             return c;
         }
+        public static User FindUserByEmail(string uEmail)
+        {
+            User c = new User();
+            try
+            {
+                using (var context = new GroupStudyContext())
+                {
+                    c = context.Users.SingleOrDefault(x => x.Email == uEmail);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return c;
+        }
+
 
         public static void SaveUser(User c)
         {
@@ -89,5 +107,43 @@ namespace DataAccess
                 throw new Exception(e.Message);
             }
         }
+        public static int GetNextUserId()
+        {
+            int nextUserId = 0;
+            try
+            {
+                using (var context = new GroupStudyContext())
+                {
+                    nextUserId = context.Users.Max(u => u.UserId) + 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return nextUserId;
+        }
+
+        public static List<Group> SearchGroups(string keyword)
+        {
+            List<Group> searchResults;
+            try
+            {
+                using (var context = new GroupStudyContext())
+                {
+                    searchResults = context.Groups
+                        .Where(g => g.GroupName.Contains(keyword) || g.Description.Contains(keyword))
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return searchResults;
+        }
+
+
+
     }
 }

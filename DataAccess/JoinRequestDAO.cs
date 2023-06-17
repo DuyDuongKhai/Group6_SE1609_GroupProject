@@ -43,13 +43,15 @@ namespace DataAccess
             return c;
         }
 
-        public static void SaveJoinRequest(JoinRequest c)
+        public static void SaveJoinRequest(JoinRequest joinRequest)
         {
             try
             {
+                joinRequest.RequestId = GetNextJoinRequestId();
+
                 using (var context = new GroupStudyContext())
                 {
-                    context.JoinRequests.Add(c);
+                    context.JoinRequests.Add(joinRequest);
                     context.SaveChanges();
                 }
             }
@@ -58,6 +60,7 @@ namespace DataAccess
                 throw new Exception(ex.Message);
             }
         }
+
         public static void UpdateJoinRequest(JoinRequest c)
         {
             try
@@ -89,5 +92,24 @@ namespace DataAccess
                 throw new Exception(e.Message);
             }
         }
+        public static int GetNextJoinRequestId()
+        {
+            int nextJoinRequestId = 0;
+            try
+            {
+                using (var context = new GroupStudyContext())
+                {
+                    nextJoinRequestId = context.JoinRequests.Max(jr => jr.RequestId) + 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return nextJoinRequestId;
+        }
+
+
+
     }
 }

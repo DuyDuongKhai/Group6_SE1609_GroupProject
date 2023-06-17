@@ -13,6 +13,9 @@ namespace Repositories
         User GetUserById(int id);
         void DeleteUser(User c);
         void UpdateUser(User c);
+        User GetUserByEmail(string email);
+        int GetNextUserId();
+        List<Group> SearchGroups(string keyword);
 
         List<User> GetUsers();
       
