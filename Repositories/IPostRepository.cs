@@ -1,9 +1,9 @@
-﻿using BusinessObject.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
+using BusinessObject.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Repositories
 {
@@ -17,5 +17,6 @@ namespace Repositories
         List<User> GetUsers();
         List<Group> GetGroups();
         List<Post> GetPosts();
+        List<Post> GetPostByGroupId(int groupId);
     }
 }

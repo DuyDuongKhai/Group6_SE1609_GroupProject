@@ -19,13 +19,15 @@ namespace GroupStudyAPI.Controllers
         private readonly IUserRepository userRepository;
         private readonly IGroupMemberRepository groupMemberRepository;
         private readonly IJoinRequestRepository joinRequestRepository;
+        private readonly IPostRepository postRepository;
         private readonly IMapper _mapper;
-        public GroupAdminController(IGroupRepository groupRepository, IUserRepository userRepository, IGroupMemberRepository groupMemberRepository, IJoinRequestRepository joinRequestRepository,IMapper mapper)
+        public GroupAdminController(IGroupRepository groupRepository, IUserRepository userRepository, IGroupMemberRepository groupMemberRepository, IJoinRequestRepository joinRequestRepository,IMapper mapper,IPostRepository postRepository)
         {
             this.groupRepository = groupRepository;
             this.userRepository = userRepository;
             this.groupMemberRepository = groupMemberRepository;
             this.joinRequestRepository = joinRequestRepository;
+            this.postRepository = postRepository;
             _mapper = mapper;
         }
 
@@ -136,18 +138,7 @@ namespace GroupStudyAPI.Controllers
                 list = groupMemberRepository.GetMemberFromGroup(groupId);
                 foreach(var user in list)
                 {
-                    newList.Add(new UserModel
-                    {
-                        UserId = user.UserId,
-                        Address= user.Address,
-                        DateOfBirth= DateTime.Now,
-                        Email= user.Email,
-                        FirstName= user.FirstName,
-                        LastName= user.LastName,
-                        Password= user.Password,
-                        PhoneNumber= user.PhoneNumber,
-                        Role= user.Role,
-                    });
+                    newList.Add(_mapper.Map<UserModel>(user));
                 }
             }catch(Exception ex)
             {
@@ -202,6 +193,65 @@ namespace GroupStudyAPI.Controllers
             }
             return Ok(list1);
         }
+
+        [HttpDelete]
+        [Route("RemoveMember/{groupId}/{memberId}")]
+        public async Task<IActionResult> RemoveMember(int groupId,int memberId)
+        {
+            string msg = "";
+            try
+            {
+                var member = userRepository.GetUserById(memberId);
+                if(member==null)
+                {
+                    return BadRequest("No member has that id");
+                }
+                GroupMember c = new GroupMember
+                {
+                    GroupId = groupId,
+                    UserId = memberId
+                };
+                groupMemberRepository.DeleteGroupMember(c);
+            }
+            catch (Exception ex)
+            {
+                msg=ex.Message;
+            }
+            return Ok("Delete success");
+        }
+        [HttpGet]
+        [Route("GroupPosts/{groupId}")]
+        public async Task<IActionResult> GroupPosts(int groupId)
+        {
+            List<PostModel> posts = new List<PostModel>();
+           try
+            {
+                posts= _mapper.Map<List<PostModel>>(postRepository.GetPostByGroupId(groupId));
+            }catch
+            (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return Ok(posts);
+        }
+        [HttpDelete]
+        [Route("DeletePost/{postId}")]
+        public async Task<IActionResult> DeletePost(int postId)
+        {
+            try
+            {
+                var p = new Post
+                {
+                    PostId= postId
+                };
+                postRepository.DeletePost(p);
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok("Delete Post success");
+        }
+
         
         
     }

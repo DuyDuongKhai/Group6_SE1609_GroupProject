@@ -136,14 +136,14 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    var c1 = context.GroupMembers.SingleOrDefault(u => u.GroupMemberId == c.GroupMemberId);
+                    var c1 = context.GroupMembers.SingleOrDefault(u => u.GroupId == c.GroupId&& u.UserId == c.UserId);
                     context.GroupMembers.Remove(c1);
                     context.SaveChanges();
                 }
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw new Exception("User does not exist in the group");
             }
         }
     }

@@ -17,6 +17,11 @@ namespace GroupStudyAPI.AutoMapper
             CreateMap<Group, GroupModel>()
            .ReverseMap();
 
+            CreateMap<Post, PostModel>().ReverseMap()
+            .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.Group))
+           .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User))
+           ;
+
 
         }
     }

@@ -49,6 +49,8 @@ namespace GroupStudyAPI
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<IGroupMemberRepository, GroupMemberRepository>();
             services.AddScoped<IJoinRequestRepository, JoinRequestRepository>();
+            services.AddScoped<IPostRepository, PostRepository>();
+
             var mapperConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
