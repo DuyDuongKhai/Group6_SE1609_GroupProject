@@ -12,7 +12,6 @@ namespace Repositories
     { 
         public void DeleteJoinRequest(JoinRequest c) => JoinRequestDAO.DeleteJoinRequest(c);
 
-        public void SaveJoinRequest(JoinRequest c) => JoinRequestDAO.SaveJoinRequest(c);
 
         public void UpdateJoinRequest(JoinRequest c) => JoinRequestDAO.UpdateJoinRequest(c);
 
@@ -23,6 +22,11 @@ namespace Repositories
 
         public List<Group> GetGroups() => GroupDAO.GetGroups();
         public List<JoinRequest> GetJoinRequests() => JoinRequestDAO.GetJoinRequests();
+
+        public void SaveJoinRequest(JoinRequest joinRequest)
+        {
+            JoinRequestDAO.SaveJoinRequest(joinRequest);
+        }
 
     }
 }
