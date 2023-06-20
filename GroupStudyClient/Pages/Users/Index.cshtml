@@ -1,0 +1,64 @@
+﻿@page
+@model GroupStudyClient.Pages.Users.IndexModel
+<a href="/Users/DashboardProfile" class="btn btn-primary">Go to Dashboard Profile</a>
+<h1>List of Groups</h1>
+
+<form method="get">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Search keyword" name="keyword" value="@Model.Keyword">
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.Groups != null && Model.Groups.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Group Name</th>
+                <th>Group Admin</th>
+                <th>Created At</th>
+                <th>Description</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var group in Model.Groups)
+            {
+                <tr>
+                    <td>@group.GroupName</td>
+                    <td>@group.GroupAdminId</td>
+                    <td>@group.CreatedAt</td>
+                    <td>@group.Description</td>
+                    <td>
+                        <form method="post" asp-page-handler="JoinGroup" asp-route-userId="@Model.UserId" asp-route-groupId="@group.GroupId">
+                            <button type="submit" class="btn btn-primary">Join Group</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No groups found.</p>
+}
+
+@if (!string.IsNullOrEmpty(TempData["Message"]?.ToString()))
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["Message"]
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(TempData["ErrorMessage"]?.ToString()))
+{
+    <div class="alert alert-danger" role="alert">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+

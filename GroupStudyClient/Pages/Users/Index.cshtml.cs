@@ -1,0 +1,97 @@
+﻿using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using BusinessObject.Models;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
+
+namespace GroupStudyClient.Pages.Users
+{
+    public class IndexModel : PageModel
+    {
+        private readonly IHttpClientFactory _clientFactory;
+
+        public IndexModel(IHttpClientFactory clientFactory)
+        {
+            _clientFactory = clientFactory;
+        }
+
+        [BindProperty(SupportsGet = true)]
+        public int UserId { get; set; }
+
+        public List<Group> Groups { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string Keyword { get; set; }
+
+        public async Task<IActionResult> OnGetAsync()
+        {
+            if (string.IsNullOrEmpty(Keyword))
+            {
+                // Lấy danh sách tất cả các nhóm
+                var httpClient = _clientFactory.CreateClient();
+                var response = await httpClient.GetAsync("https://localhost:44340/api/Groups");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    Groups = JsonConvert.DeserializeObject<List<Group>>(content);
+                }
+                else
+                {
+                    Groups = new List<Group>();
+                }
+            }
+            else
+            {
+                // Tìm kiếm nhóm dựa trên từ khóa
+                var httpClient = _clientFactory.CreateClient();
+                var response = await httpClient.GetAsync($"https://localhost:44340/api/User/search/{Keyword}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    Groups = JsonConvert.DeserializeObject<List<Group>>(content);
+                }
+                else
+                {
+                    Groups = new List<Group>();
+                }
+            }
+
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostJoinGroup(int groupId)
+        {
+            // Lấy UserId từ Session hoặc từ một nguồn khác tùy vào cách bạn lưu trữ UserId
+            var userId = HttpContext.Session.GetString("UserId");
+            if (string.IsNullOrEmpty(userId))
+            {
+                // Xử lý khi không tìm thấy UserId
+                // Có thể chuyển hướng người dùng đến trang đăng nhập hoặc hiển thị thông báo lỗi
+                return RedirectToPage("/Login");
+            }
+
+            var httpClient = _clientFactory.CreateClient();
+            var response = await httpClient.PostAsync($"https://localhost:44340/api/User/{userId}/groups/{groupId}/join", null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Join request sent successfully
+                // Có thể thêm thông báo hoặc xử lý khác ở đây
+                TempData["Message"] = "Join request sent successfully.";
+            }
+            else
+            {
+                // Có lỗi xảy ra khi gửi join request
+                // Có thể xử lý lỗi hoặc hiển thị thông báo tùy ý ở đây
+                TempData["ErrorMessage"] = "An error occurred while sending join request.";
+            }
+
+            return RedirectToPage();
+        }
+    }
+}
