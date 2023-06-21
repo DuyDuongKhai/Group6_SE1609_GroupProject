@@ -1,14 +1,14 @@
-﻿using BusinessObject.Models;
+﻿using System;
+using System.Text;
+using Repositories;
 using GroupStudyAPI.Models;
-using Microsoft.AspNetCore.Http;
+using BusinessObject.Models;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Repositories;
-using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace GroupStudyAPI.Controllers
 {
@@ -100,7 +100,7 @@ namespace GroupStudyAPI.Controllers
                     new Claim(ClaimTypes.Role, user.Role),
                     new Claim("TokenId", Guid.NewGuid().ToString())
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
             };
 

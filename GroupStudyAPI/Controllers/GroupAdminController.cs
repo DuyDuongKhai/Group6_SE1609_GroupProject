@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using System.Linq;
+using System.Data;
 using Repositories;
 using BusinessObject.Models;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using BusinessObject.Sub_Model;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GroupStudyAPI.Controllers
 {
@@ -32,6 +34,7 @@ namespace GroupStudyAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, GroupAdmin")]
         [Route("CreateGroup")]
         public async Task<IActionResult> CreateGroup(GroupModel g)
         {
@@ -70,6 +73,7 @@ namespace GroupStudyAPI.Controllers
             return Ok("Create Group success");
         }
         [HttpGet]
+        [Authorize(Roles = "Admin, GroupAdmin")]
         public async Task<List<Group>> GetAll()
         {
             var list=new List<Group>();
@@ -84,6 +88,8 @@ namespace GroupStudyAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin, GroupAdmin")]
+
         [Route("AddMemberToGroup/{groupId}/{memberId}")]
         public async Task<IActionResult> AddMember( int groupId, int memberId)
         {
@@ -122,6 +128,8 @@ namespace GroupStudyAPI.Controllers
             return Ok(msg);
         }
         [HttpGet]
+        [Authorize(Roles = "Admin, GroupAdmin")]
+
         [Route("GetGroupMember/{groupId}")]
         public async Task<IActionResult> GetGroupMemberById(int groupId)
         {
@@ -149,6 +157,7 @@ namespace GroupStudyAPI.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Admin, GroupAdmin")]
         [Route("ApproveRequest/{memberId}/{groupId}")]
         public async Task<IActionResult> ApproveRequest(int memberId,int groupId)
         {
@@ -172,6 +181,7 @@ namespace GroupStudyAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, GroupAdmin")]
         [Route("ViewJoinRequest/{groupId}")]
         public async Task<IActionResult> ListRequestFromGroup(int groupId)
         {
@@ -195,6 +205,8 @@ namespace GroupStudyAPI.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = "Admin, GroupAdmin")]
+
         [Route("RemoveMember/{groupId}/{memberId}")]
         public async Task<IActionResult> RemoveMember(int groupId,int memberId)
         {
@@ -220,6 +232,8 @@ namespace GroupStudyAPI.Controllers
             return Ok("Delete success");
         }
         [HttpGet]
+        [Authorize(Roles = "Admin, GroupAdmin")]
+
         [Route("GroupPosts/{groupId}")]
         public async Task<IActionResult> GroupPosts(int groupId)
         {
@@ -235,6 +249,8 @@ namespace GroupStudyAPI.Controllers
             return Ok(posts);
         }
         [HttpDelete]
+        [Authorize(Roles = "Admin, GroupAdmin")]
+
         [Route("DeletePost/{postId}")]
         public async Task<IActionResult> DeletePost(int postId)
         {
