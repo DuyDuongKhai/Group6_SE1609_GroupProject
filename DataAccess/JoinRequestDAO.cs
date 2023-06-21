@@ -142,7 +142,10 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    nextJoinRequestId = context.JoinRequests.Max(jr => jr.RequestId) + 1;
+                    if (context.JoinRequests.Count() > 0)
+                    {
+                        nextJoinRequestId = context.JoinRequests.Max(jr => jr.RequestId) + 1;
+                    }
                 }
             }
             catch (Exception ex)

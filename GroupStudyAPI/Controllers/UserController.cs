@@ -1,12 +1,12 @@
-﻿using BusinessObject.Models;
-using GroupStudyAPI.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Repositories;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
+using Repositories;
+using GroupStudyAPI.Models;
+using BusinessObject.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using Microsoft.Extensions.Options;
 
 namespace GroupStudyAPI.Controllers
 {
@@ -96,7 +96,8 @@ namespace GroupStudyAPI.Controllers
                 return BadRequest("User is already a member of the group.");
 
             // Check if the user has already sent a join request to the group
-            if (group.JoinRequests.Any(jr => jr.UserId == userId))
+            bool isInGroup = group.JoinRequests.Any(jr => jr.UserId == userId && jr.GroupId == groupId);
+            if (isInGroup)
                 return BadRequest("User has already sent a join request to the group.");
 
             // Create a new join request

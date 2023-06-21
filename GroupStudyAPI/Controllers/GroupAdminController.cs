@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using System.Linq;
+using System.Data;
 using Repositories;
 using BusinessObject.Models;
 using System.Threading.Tasks;
@@ -9,7 +10,6 @@ using BusinessObject.Sub_Model;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
-using System.Data;
 
 namespace GroupStudyAPI.Controllers
 {
@@ -167,6 +167,7 @@ namespace GroupStudyAPI.Controllers
             try
             {
                 joinRequestRepository.UpdateJoinRequest(joinRequest);
+              await AddMember(groupId,memberId );
             }catch(Exception ex)
             {
                 throw new Exception(ex.Message);
