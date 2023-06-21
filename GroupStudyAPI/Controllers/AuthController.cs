@@ -73,21 +73,30 @@ namespace GroupStudyAPI.Controllers
             {
                 return Ok(new ApiResponse
                 {
-                    Success = true,
+                    Success = false,
                     Message = "Invalid username/password"
                 });
             }
 
+            var token = GenerateToken(user);
+
             return Ok(new ApiResponse
             {
                 Success = true,
-                Message = "Authenticate success",
-                Data = GenerateToken(user)
+                Message = "Authentication success",
+                Data = token
             });
         }
 
+
         private string GenerateToken(User user)
         {
+            if (user == null)
+            {
+                // Handle case when user is not found
+                return null;
+            }
+
             var jwtTokenHandler = new JwtSecurityTokenHandler();
             var secretKeyBytes = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
 
@@ -95,18 +104,20 @@ namespace GroupStudyAPI.Controllers
             {
                 Subject = new ClaimsIdentity(new[]
                 {
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Name, user.LastName),
-                    new Claim(ClaimTypes.Role, user.Role),
-                    new Claim("TokenId", Guid.NewGuid().ToString())
-                }),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Name, user.LastName),
+            new Claim("Role", user.Role),
+            new Claim("UserId", user.UserId.ToString()),
+            new Claim("TokenId", Guid.NewGuid().ToString())
+        }),
+                Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
             };
 
             var token = jwtTokenHandler.CreateToken(tokenDescription);
             return jwtTokenHandler.WriteToken(token);
         }
+
 
 
 
