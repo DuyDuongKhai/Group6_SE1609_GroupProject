@@ -10,17 +10,31 @@ namespace Repositories
 {
     public class CommentRepository : ICommentRepository
     {
-        public void DeleteComment(Comment c) => CommentDAO.DeleteComment(c);
+        private readonly CommentDAO _commentDAO;
+        private readonly UserDAO _userDAO;
+        private readonly PostDAO _postDAO;
 
-        public void SaveComment(Comment c) => CommentDAO.SaveComment(c);
+        public CommentRepository()
+        {
+            _commentDAO = new CommentDAO();
+            _userDAO = new UserDAO();
+            _postDAO = new PostDAO();
+        }
 
-        public void UpdateComment(Comment c) => CommentDAO.UpdateComment(c);
+        public void DeleteComment(Comment c) => DataAccess.CommentDAO.DeleteComment(c);
+
+
+        public void SaveComment(Comment c) => DataAccess.CommentDAO.SaveComment(c);
+
+        public void UpdateComment(Comment c) => DataAccess.CommentDAO.UpdateComment(c);
 
         public List<User> GetUsers() => UserDAO.GetUsers();
 
-        public List<Post> GetPosts() => PostDAO.GetPosts();
-        public Comment GetCommentById(int id) => CommentDAO.FindCommentById(id);
 
-        public List<Comment> GetComments() => CommentDAO.GetComments();
+        public List<Post> GetPosts() => PostDAO.GetPosts();
+
+        public Comment GetCommentById(int id) => DataAccess.CommentDAO.FindCommentById(id);
+
+        public List<Comment> GetComments() => DataAccess.CommentDAO.GetComments();
     }
 }

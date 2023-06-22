@@ -13,7 +13,7 @@ namespace Repositories
         ChatMessage GetChatMessageById(int id);
         void DeleteChatMessage(ChatMessage c);
         void UpdateChatMessage(ChatMessage c);
-
+        public int GetNextMessageId();
         List<User> GetUsers();
         List<Group> GetGroups();
         List<ChatMessage> GetChatMessages();

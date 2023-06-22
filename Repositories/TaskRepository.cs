@@ -18,7 +18,11 @@ namespace Repositories
         public void UpdateTask(Task c) => TaskDAO.UpdateTask(c);
 
         public Task GetTaskById(int id) => TaskDAO.FindTaskById(id);
-
+        public int GetNextTaskId()
+        {
+            int nextTaskId = TaskDAO.GetNextTaskId();
+            return nextTaskId;
+        }
         public List<Group> GetGroups() => GroupDAO.GetGroups();
         public List<User> GetUsers() => UserDAO.GetUsers();
         public List<Task> GetTasks() => TaskDAO.GetTasks();
