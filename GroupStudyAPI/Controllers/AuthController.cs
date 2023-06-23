@@ -100,7 +100,7 @@ namespace GroupStudyAPI.Controllers
                     new Claim(ClaimTypes.Role, user.Role),
                     new Claim("TokenId", Guid.NewGuid().ToString())
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
             };
 
