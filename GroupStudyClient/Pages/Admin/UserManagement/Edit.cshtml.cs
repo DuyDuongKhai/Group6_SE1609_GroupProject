@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject.Models;
+using System.Net.Http;
+using System.Text.Json;
+using System.Text;
 
 namespace GroupStudyClient.Pages.Admin.UserManagement
 {
     public class EditModel : PageModel
     {
-        private readonly BusinessObject.Models.GroupStudyContext _context;
+        private readonly IHttpClientFactory _clientFactory;
 
-        public EditModel(BusinessObject.Models.GroupStudyContext context)
+        public EditModel(IHttpClientFactory clientFactory)
         {
-            _context = context;
+            _clientFactory = clientFactory;
         }
 
         [BindProperty]
@@ -24,17 +27,22 @@ namespace GroupStudyClient.Pages.Admin.UserManagement
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
+            var httpClient = _clientFactory.CreateClient();
+
+            // Send login request to the API
+            var response = await httpClient.GetAsync($"https://localhost:44340/api/Users/{id}");
+            if (response.IsSuccessStatusCode)
             {
-                return NotFound();
+                var apiResponse = await response.Content.ReadAsStringAsync();
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                };
+                User = JsonSerializer.Deserialize<User>(apiResponse, options);
             }
 
-            User = await _context.Users.FirstOrDefaultAsync(m => m.UserId == id);
 
-            if (User == null)
-            {
-                return NotFound();
-            }
             return Page();
         }
 
@@ -42,35 +50,39 @@ namespace GroupStudyClient.Pages.Admin.UserManagement
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            var httpClient = _clientFactory.CreateClient();
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _context.Attach(User).State = EntityState.Modified;
+            var jsonContent = JsonSerializer.Serialize(User);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+           
 
             try
             {
-                await _context.SaveChangesAsync();
+                HttpResponseMessage response = await httpClient.PutAsync($"https://localhost:44340/api/Users/{User.UserId}\r\n", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    // The flowerBouquet data was successfully updated, handle the success as needed
+                    return RedirectToPage("/Admin/UserManagement/Index");
+                }
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(User.UserId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
+
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("/Admin/UserManagement/Index");
+
         }
 
-        private bool UserExists(int id)
-        {
-            return _context.Users.Any(e => e.UserId == id);
-        }
+        //private bool UserExists(int id)
+        //{
+        //    return _context.Users.Any(e => e.UserId == id);
+        //}
     }
 }
