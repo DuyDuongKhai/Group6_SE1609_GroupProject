@@ -1,0 +1,75 @@
+﻿@page
+@model GroupStudyClient.Pages.Users.DashboardProfileModel
+
+<h1>Dashboard Profile</h1>
+
+@if (Model.User != null)
+{
+    <form method="post">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" name="Email" value="@Model.User.Email" readonly>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" class="form-control" id="password" name="Password" value="@Model.User.Password" readonly>
+        </div>
+        <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input type="text" class="form-control" id="firstName" name="FirstName" value="@Model.User.FirstName" readonly>
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input type="text" class="form-control" id="lastName" name="LastName" value="@Model.User.LastName" readonly>
+        </div>
+        <div class="form-group">
+            <label for="dateOfBirth">Date of Birth:</label>
+            <input type="date" class="form-control" id="dateOfBirth" name="DateOfBirth" value="@Model.User.DateOfBirth?.ToString("yyyy-MM-dd")" readonly>
+        </div>
+        <div class="form-group">
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="text" class="form-control" id="phoneNumber" name="PhoneNumber" value="@Model.User.PhoneNumber" readonly>
+        </div>
+        <div class="form-group">
+            <label for="address">Address:</label>
+            <input type="text" class="form-control" id="address" name="Address" value="@Model.User.Address" readonly>
+        </div>
+        <button type="button" class="btn btn-primary" id="editButton">Edit</button>
+        <button type="submit" class="btn btn-success d-none" id="saveButton">Save</button>
+        <button type="button" class="btn btn-secondary" id="cancelButton">Cancel</button>
+    </form>
+}
+
+@section Scripts {
+    <script>
+        document.getElementById("editButton").addEventListener("click", function () {
+            document.getElementById("email").readOnly = false;
+            document.getElementById("password").readOnly = false;
+            document.getElementById("firstName").readOnly = false;
+            document.getElementById("lastName").readOnly = false;
+            document.getElementById("dateOfBirth").readOnly = false;
+            document.getElementById("phoneNumber").readOnly = false;
+            document.getElementById("address").readOnly = false;
+
+            document.getElementById("editButton").classList.add("d-none");
+            document.getElementById("saveButton").classList.remove("d-none");
+        });
+
+        document.getElementById("saveButton").addEventListener("click", function () {
+            document.getElementById("email").readOnly = true;
+            document.getElementById("password").readOnly = true;
+            document.getElementById("firstName").readOnly = true;
+            document.getElementById("lastName").readOnly = true;
+            document.getElementById("dateOfBirth").readOnly = true;
+            document.getElementById("phoneNumber").readOnly = true;
+            document.getElementById("address").readOnly = true;
+
+            document.getElementById("editButton").classList.remove("d-none");
+            document.getElementById("saveButton").classList.add("d-none");
+        });
+
+        document.getElementById("cancelButton").addEventListener("click", function () {
+            window.location.href = "/Users/Index";
+        });
+    </script>
+}

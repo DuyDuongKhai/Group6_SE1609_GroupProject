@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using BusinessObject.Sub_Model;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace GroupStudyAPI.Controllers
 {
@@ -70,6 +72,7 @@ namespace GroupStudyAPI.Controllers
             return Ok("Create Group success");
         }
         [HttpGet]
+        [Authorize(Roles = "Admin, GroupAdmin")]
         public async Task<List<Group>> GetAll()
         {
             var list=new List<Group>();
