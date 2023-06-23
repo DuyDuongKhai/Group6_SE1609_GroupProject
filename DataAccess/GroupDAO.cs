@@ -35,7 +35,7 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    c = context.Groups.SingleOrDefault(x => x.GroupId == Id);
+                    c = context.Groups.Include(x => x.GroupAdmin).SingleOrDefault(x => x.GroupId == Id);
 
                 }
             }

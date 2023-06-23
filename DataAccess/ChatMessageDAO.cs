@@ -33,7 +33,7 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    c = context.ChatMessages.SingleOrDefault(x => x.MessageId == Id);
+                    c = context.ChatMessages.Include(x => x.User).Include(x => x.Group).SingleOrDefault(x => x.MessageId == Id);
 
                 }
             }

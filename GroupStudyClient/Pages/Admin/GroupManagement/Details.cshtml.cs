@@ -6,35 +6,41 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject.Models;
+using System.Net.Http;
+using System.Text.Json;
 
 namespace GroupStudyClient.Pages.Admin.GroupManagement
 {
     public class DetailsModel : PageModel
     {
-        private readonly BusinessObject.Models.GroupStudyContext _context;
+        private readonly IHttpClientFactory _clientFactory;
 
-        public DetailsModel(BusinessObject.Models.GroupStudyContext context)
+        public DetailsModel(IHttpClientFactory clientFactory)
         {
-            _context = context;
+            _clientFactory = clientFactory;
         }
 
         public Group Group { get; set; }
 
-        //public async Task<IActionResult> OnGetAsync(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        public async Task<IActionResult> OnGetAsync(int? id)
+        {
+            var httpClient = _clientFactory.CreateClient();
 
-        //    Group = await _context.Groups
-        //        .Include(@ => @.GroupAdmin).FirstOrDefaultAsync(m => m.GroupId == id);
+            // Send login request to the API
+            var response = await httpClient.GetAsync($"https://localhost:44340/api/Groups/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var apiResponse = await response.Content.ReadAsStringAsync();
 
-        //    if (Group == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return Page();
-        //}
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                };
+                Group = JsonSerializer.Deserialize<Group>(apiResponse, options);
+            }
+
+
+            return Page();
+        }
     }
 }

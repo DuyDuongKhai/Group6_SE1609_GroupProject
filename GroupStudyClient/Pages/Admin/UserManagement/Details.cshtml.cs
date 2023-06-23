@@ -6,33 +6,41 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject.Models;
+using System.Net.Http;
+using System.Text.Json;
 
 namespace GroupStudyClient.Pages.Admin.UserManagement
 {
     public class DetailsModel : PageModel
     {
-        private readonly BusinessObject.Models.GroupStudyContext _context;
+        private readonly IHttpClientFactory _clientFactory;
 
-        public DetailsModel(BusinessObject.Models.GroupStudyContext context)
+
+        public DetailsModel(IHttpClientFactory clientFactory)
         {
-            _context = context;
+            _clientFactory = clientFactory;
         }
 
         public User User { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var httpClient = _clientFactory.CreateClient();
 
-            User = await _context.Users.FirstOrDefaultAsync(m => m.UserId == id);
-
-            if (User == null)
+            // Send login request to the API
+            var response = await httpClient.GetAsync($"https://localhost:44340/api/Users/{id}");
+            if (response.IsSuccessStatusCode)
             {
-                return NotFound();
+                var apiResponse = await response.Content.ReadAsStringAsync();
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                };
+                User = JsonSerializer.Deserialize<User>(apiResponse, options);
             }
+                
+            
             return Page();
         }
     }
