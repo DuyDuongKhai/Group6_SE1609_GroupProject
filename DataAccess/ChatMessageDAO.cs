@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    listChatMessages = context.ChatMessages.ToList();
+                    listChatMessages = context.ChatMessages.Include(x => x.User).Include(x=>x.Group).ToList();
                 }
             }
             catch (Exception ex)
