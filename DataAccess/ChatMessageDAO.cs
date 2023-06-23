@@ -89,5 +89,21 @@ namespace DataAccess
                 throw new Exception(e.Message);
             }
         }
+        public static int GetNextMessageId()
+        {
+            int nextMessageId = 0;
+            try
+            {
+                using (var context = new GroupStudyContext())
+                {
+                    nextMessageId = context.ChatMessages.Max(m => m.MessageId) + 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return nextMessageId;
+        }
     }
 }

@@ -14,7 +14,7 @@ namespace Repositories
         Task GetTaskById(int id);
         void DeleteTask(Task c);
         void UpdateTask(Task c);
-
+        int GetNextTaskId();
         List<User> GetUsers();
         List<Group> GetGroups();
         List<Task> GetTasks();

@@ -23,5 +23,10 @@ namespace Repositories
         public ChatMessage GetChatMessageById(int id) => ChatMessageDAO.FindChatMessageById(id);
 
         public List<ChatMessage> GetChatMessages() => ChatMessageDAO.GetChatMessages();
+        public int GetNextMessageId()
+        {
+            int nextMessagedId = ChatMessageDAO.GetNextMessageId();
+            return nextMessagedId;
+        }
     }
 }
