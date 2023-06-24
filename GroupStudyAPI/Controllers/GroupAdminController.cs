@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using System.Linq;
+using System.Data;
 using Repositories;
 using BusinessObject.Models;
 using System.Threading.Tasks;
@@ -9,7 +10,6 @@ using BusinessObject.Sub_Model;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
-using System.Data;
 
 namespace GroupStudyAPI.Controllers
 {
@@ -72,7 +72,6 @@ namespace GroupStudyAPI.Controllers
             return Ok("Create Group success");
         }
         [HttpGet]
-        [Authorize(Roles = "Admin, GroupAdmin")]
         public async Task<List<Group>> GetAll()
         {
             var list=new List<Group>();
@@ -155,6 +154,7 @@ namespace GroupStudyAPI.Controllers
         [Route("ApproveRequest/{memberId}/{groupId}")]
         public async Task<IActionResult> ApproveRequest(int memberId,int groupId)
         {
+            var msg = "";
             int requestId = joinRequestRepository.GetRequestId(groupId, memberId);
             JoinRequestModel joinRequestModel = new JoinRequestModel
             {
@@ -167,11 +167,38 @@ namespace GroupStudyAPI.Controllers
             try
             {
                 joinRequestRepository.UpdateJoinRequest(joinRequest);
+              await AddMember(groupId,memberId );
+                msg = "Approve and Added to group";
             }catch(Exception ex)
             {
-                throw new Exception(ex.Message);
+                msg = ex.Message;   
             }
-            return Ok("Approve");
+            return Ok(msg);
+        }
+
+        [HttpDelete]
+        [Route("DisapproveRequest/{memberId}/{groupId}")]
+        public async Task<IActionResult> DisapproveRequest(int memberId, int groupId)
+        {
+            var msg = "";
+            int requestId = joinRequestRepository.GetRequestId(groupId, memberId);
+            JoinRequestModel joinRequestModel = new JoinRequestModel
+            {
+                
+                GroupId = groupId,
+                UserId = memberId,
+            };
+            var joinRequest = _mapper.Map<JoinRequest>(joinRequestModel);
+            try
+            {
+                joinRequestRepository.DeleteJoinRequest(joinRequest);
+                msg = "Disapprove";
+            }
+            catch (Exception ex)
+            {
+                msg=ex.Message;
+            }
+            return Ok(msg);
         }
 
         [HttpGet]
@@ -197,6 +224,30 @@ namespace GroupStudyAPI.Controllers
             return Ok(list1);
         }
 
+        [HttpGet]
+        [Route("ViewJoinRequest/")]
+        public async Task<IActionResult> GetAllRequest()
+        {
+            string msg = "";
+            var list = new List<JoinRequest>();
+            var list1 = new List<JoinRequestModel>();
+            try
+            {
+                list = joinRequestRepository.GetJoinRequests();
+
+                foreach (var joinRequest in list)
+                {
+                    list1.Add(_mapper.Map<JoinRequest, JoinRequestModel>(joinRequest));
+                }
+            }
+            catch (Exception ex)
+            {
+                msg = ex.Message;
+                return BadRequest(msg);
+            }
+            return Ok(list1);
+        }
+
         [HttpDelete]
         [Route("RemoveMember/{groupId}/{memberId}")]
         public async Task<IActionResult> RemoveMember(int groupId,int memberId)
@@ -215,12 +266,13 @@ namespace GroupStudyAPI.Controllers
                     UserId = memberId
                 };
                 groupMemberRepository.DeleteGroupMember(c);
+                msg = "Delete Sucess";
             }
             catch (Exception ex)
             {
                 msg=ex.Message;
             }
-            return Ok("Delete success");
+            return Ok(msg);
         }
         [HttpGet]
         [Route("GroupPosts/{groupId}")]

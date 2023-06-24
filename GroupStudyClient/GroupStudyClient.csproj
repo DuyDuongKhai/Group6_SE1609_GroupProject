@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="Pages\GroupMember\" />
-    <Folder Include="Pages\GroupAdmin\" />
   </ItemGroup>
 
   <ItemGroup>
