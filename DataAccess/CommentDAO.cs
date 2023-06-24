@@ -89,5 +89,22 @@ namespace DataAccess
                 throw new Exception(e.Message);
             }
         }
+        public static List<Comment> GetCommentsByPostId(int postId)
+        {
+            var comments = new List<Comment>();
+            try
+            {
+                using (var context = new GroupStudyContext())
+                {
+                    comments = context.Comments.Where(c => c.PostId == postId).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return comments;
+        }
+
     }
 }
