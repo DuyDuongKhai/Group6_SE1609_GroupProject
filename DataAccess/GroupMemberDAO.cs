@@ -76,7 +76,7 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    if (context.GroupMembers.SingleOrDefault(x => x.UserId == c.UserId) == null)
+                    if (context.GroupMembers.SingleOrDefault(x => x.UserId == c.UserId && x.GroupId==c.GroupId) == null)
                     {
                         context.GroupMembers.Add(c);
                         context.SaveChanges();
@@ -99,7 +99,7 @@ namespace DataAccess
                 using (var context = new GroupStudyContext())
                 {
                     var user = context.Users.SingleOrDefault(x=>x.UserId== c.UserId);
-                    if (user.Role.Equals("Group Admin"))
+                    if (user.Role.Equals("GroupAdmin"))
                     {
                         context.GroupMembers.Add(c);
                         context.SaveChanges();

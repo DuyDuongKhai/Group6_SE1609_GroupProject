@@ -17,7 +17,10 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    listJoinRequests = context.JoinRequests.ToList();
+                    listJoinRequests = context.JoinRequests
+                         .Include(x => x.User)
+                        .Include(x => x.Group)
+                        .ToList();
                 }
             }
             catch (Exception ex)
@@ -74,7 +77,7 @@ namespace DataAccess
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception("No request to approve");
             }
         }
         public static void DeleteJoinRequest(JoinRequest c)
@@ -83,14 +86,14 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    var c1 = context.JoinRequests.SingleOrDefault(u => u.RequestId == c.RequestId);
+                    var c1 = context.JoinRequests.SingleOrDefault(u => u.UserId == c.UserId && u.GroupId==c.GroupId);
                     context.JoinRequests.Remove(c1);
                     context.SaveChanges();
                 }
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw new Exception("No request to disapprove");
             }
         }
 
@@ -142,7 +145,10 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    nextJoinRequestId = context.JoinRequests.Max(jr => jr.RequestId) + 1;
+                    if (context.JoinRequests.Count() > 0)
+                    {
+                        nextJoinRequestId = context.JoinRequests.Max(jr => jr.RequestId) + 1;
+                    }
                 }
             }
             catch (Exception ex)
