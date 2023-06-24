@@ -17,5 +17,6 @@ namespace Repositories
         List<User> GetUsers();
         List<Post> GetPosts();
         List<Comment> GetComments();
+        List<Comment> GetCommentsByPostId(int postId);
     }
 }

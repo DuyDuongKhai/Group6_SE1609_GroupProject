@@ -3,6 +3,8 @@ using DataAccess;
 using Microsoft.AspNetCore.Mvc;
 using Repositories;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GroupStudyAPI.Controllers
 {
@@ -100,6 +102,28 @@ namespace GroupStudyAPI.Controllers
             }
 
             return Ok(comment);
+        }
+        [HttpGet("GetCommentsByPostId/{postId}")]
+        public IActionResult GetCommentsByPostId(int postId)
+        {
+            var comments = _commentRepository.GetCommentsByPostId(postId);
+
+            if (comments == null || !comments.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(comments);
+        }
+
+
+
+
+        [HttpGet("GetAllComments")]
+        public ActionResult<IEnumerable<Comment>> GetAllComments()
+        {
+            var comments = _commentRepository.GetComments();
+            return Ok(comments);
         }
         [HttpPost("CreateTask")]
         public IActionResult CreateTask(TaskDto taskDto)
@@ -244,6 +268,19 @@ namespace GroupStudyAPI.Controllers
 
             return Ok(chatMessage);
         }
+        [HttpGet("GetAllPosts")]
+        public IActionResult GetAllPosts()
+        {
+            var posts = _postRepository.GetPosts();
+
+            if (posts == null || posts.Count == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(posts);
+        }
+
     }
 }
 
