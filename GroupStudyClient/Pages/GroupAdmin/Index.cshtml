@@ -1,0 +1,108 @@
+﻿@page
+@model GroupAdminIndexModel
+@{
+    ViewData["Title"] = "Group Admin";
+}
+<style>
+    .join-request-list {
+        margin-top: 10px;
+    }
+
+    .join-request-block {
+        padding: 10px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+
+    .user-name {
+        font-weight: bold;
+    }
+
+    .request-status {
+        color: #999;
+    }
+
+    .pending {
+        color: red;
+    }
+
+    .approve {
+        color: green;
+    }
+</style>
+@if (Model.Groups != null && Model.Groups.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Group Id</th>
+                <th>Group Name</th>
+                <th>Group Admin</th>
+                <th>Created At</th>
+                <th>Description</th>
+                <th>Join Group</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var group in Model.Groups)
+            {
+                <tr>
+                    <td>@group.GroupId</td>
+                    <td>@group.GroupName</td>
+                    <td>@group.GroupAdminId</td>
+                    <td>@group.CreatedAt</td>
+                    <td>@group.Description</td>
+                    <td>
+                        <form method="post" asp-page="/GroupAdmin/Group" asp-page-handler="GroupMember" asp-route-GroupId="@group.GroupId">
+                            <button type="submit" class="btn btn-primary">Join</button>
+                        </form>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No groups found.</p>
+}
+<div class="sidebar">
+    <h4>Join Requests</h4>
+    <div class="join-request-list">
+        @foreach (var joinRequest in Model.JoinRequests)
+        {
+            <div class="join-request-block">
+                <span class="user-name">@joinRequest.User.Email</span>
+                <br>
+                <span class="user-name">@joinRequest.Group.GroupName</span>
+                <br>
+                <span class="request-status @(joinRequest.Status == "Pending" ? "pending" : "approve")">@joinRequest.Status</span>
+                <br>
+                        <span>
+                    <form method="post" asp-page-handler="Approve" asp-route-userId="@joinRequest.UserId" asp-route-groupId="@joinRequest.GroupId">
+                                <button type="submit" class="btn btn-primary">Approve</button>
+                            </form>
+                        
+                
+                    <form method="post" asp-page-handler="Disapprove" asp-route-userId="@joinRequest.UserId" asp-route-groupId="@joinRequest.GroupId">
+                        <button type="submit" class="btn btn-primary">Disapprove</button>
+                    </form>
+                </span>
+            </div>
+        }
+    </div>
+    @if (!string.IsNullOrEmpty(TempData["Message"]?.ToString()))
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["Message"]
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(TempData["ErrorMessage"]?.ToString()))
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+</div>
