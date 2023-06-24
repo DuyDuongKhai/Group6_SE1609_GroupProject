@@ -36,6 +36,7 @@ namespace DataAccess
                 using (var context = new GroupStudyContext())
                 {
                     c = context.Groups
+                        .Include(x=>x.GroupAdmin)
                         .Include(x=>x.JoinRequests)
                         .SingleOrDefault(x => x.GroupId == Id);
 
