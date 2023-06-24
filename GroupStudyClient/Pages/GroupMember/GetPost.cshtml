@@ -1,0 +1,44 @@
+﻿
+@page
+@using BusinessObject.Models
+@model GroupStudyClient.Pages.GroupMember.GetPostModel
+
+@{
+    ViewData["Title"] = "Get Post";
+}
+
+<h1>Get Post</h1>
+
+@if (ViewData["Posts"] != null)
+{
+    <h2>Posts</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Post ID</th>
+                <th>Group ID</th>
+                <th>User ID</th>
+                <th>Content</th>
+                <th>Actions</th> <!-- Thêm cột Actions -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var post in (List<Post>)ViewData["Posts"])
+            {
+                <tr>
+                    <td>@post.PostId</td>
+                    <td>@post.GroupId</td>
+                    <td>@post.UserId</td>
+                    <td>@post.Content</td>
+                    <td>
+                        <a href="/GroupMember/CreateComment?postId=@post.PostId">Comment</a> <!-- Thêm nút Comment với postId tương ứng -->
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No posts found.</p>
+}

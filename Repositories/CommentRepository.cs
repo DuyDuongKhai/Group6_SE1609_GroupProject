@@ -36,5 +36,10 @@ namespace Repositories
         public Comment GetCommentById(int id) => DataAccess.CommentDAO.FindCommentById(id);
 
         public List<Comment> GetComments() => DataAccess.CommentDAO.GetComments();
+
+        public List<Comment> GetCommentsByPostId(int postId)
+        {
+            return DataAccess.CommentDAO.GetComments().Where(c => c.PostId == postId).ToList();
+        }
     }
 }
