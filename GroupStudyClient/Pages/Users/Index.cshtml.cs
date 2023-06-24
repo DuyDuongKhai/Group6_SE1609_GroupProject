@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
+﻿using System.Net.Http;
+using Newtonsoft.Json;
+using BusinessObject.Models;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using BusinessObject.Models;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace GroupStudyClient.Pages.Users
 {
@@ -88,7 +88,8 @@ namespace GroupStudyClient.Pages.Users
             {
                 // Có lỗi xảy ra khi gửi join request
                 // Có thể xử lý lỗi hoặc hiển thị thông báo tùy ý ở đây
-                TempData["ErrorMessage"] = "An error occurred while sending join request.";
+                var responseContent = await response.Content.ReadAsStringAsync();
+                TempData["ErrorMessage"] = responseContent.ToString() ;
             }
 
             return RedirectToPage();
