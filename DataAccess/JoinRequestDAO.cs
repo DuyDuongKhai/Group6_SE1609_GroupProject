@@ -158,6 +158,19 @@ namespace DataAccess
             return nextJoinRequestId;
         }
 
+        public static bool CheckJoinRequest(int requestId)
+        {
+                using (var context = new GroupStudyContext())
+                {
+                    JoinRequest existedJr= context.JoinRequests.FirstOrDefault(x=>x.RequestId== requestId);
+                    if(existedJr.Status.Equals("Pending"))
+                    {
+                        return false;
+                    }
+                }
+            return true;
+        }
+
 
 
     }

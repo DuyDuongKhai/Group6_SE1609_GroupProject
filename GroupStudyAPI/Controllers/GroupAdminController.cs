@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using BusinessObject.Sub_Model;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Authorization;
 
 namespace GroupStudyAPI.Controllers
@@ -164,11 +165,18 @@ namespace GroupStudyAPI.Controllers
                 Status= "Approved"
             };
             var joinRequest = _mapper.Map<JoinRequest>(joinRequestModel);
+            var checkJr = joinRequestRepository.CheckJoinRequest(joinRequestModel.RequestId);
             try
             {
-                joinRequestRepository.UpdateJoinRequest(joinRequest);
-              await AddMember(groupId,memberId );
-                msg = "Approve and Added to group";
+                if (!checkJr)
+                {
+                    joinRequestRepository.UpdateJoinRequest(joinRequest);
+                    await AddMember(groupId, memberId);
+                    msg = "Approve and Added to group";
+                }else
+                {
+                    throw new Exception("Already Approved");
+                }
             }catch(Exception ex)
             {
                 msg = ex.Message;   
@@ -182,17 +190,26 @@ namespace GroupStudyAPI.Controllers
         {
             var msg = "";
             int requestId = joinRequestRepository.GetRequestId(groupId, memberId);
+
             JoinRequestModel joinRequestModel = new JoinRequestModel
             {
                 
                 GroupId = groupId,
                 UserId = memberId,
             };
+            var checkJr = joinRequestRepository.CheckJoinRequest(requestId);
             var joinRequest = _mapper.Map<JoinRequest>(joinRequestModel);
             try
             {
-                joinRequestRepository.DeleteJoinRequest(joinRequest);
-                msg = "Disapprove";
+                if (!checkJr)
+                {
+                    joinRequestRepository.DeleteJoinRequest(joinRequest);
+                    msg = "Disapprove";
+                }
+                else
+                {
+                    throw new Exception("Can't dissapprove when it already approved");
+                }
             }
             catch (Exception ex)
             {
