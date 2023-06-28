@@ -1,33 +1,135 @@
 ﻿@page
 @model GroupStudyClient.Pages.GroupAdmin.GroupModel
 @{
+    var groupId = Request.Query["GroupId"];
 }
+ <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="~/css/style.scss">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+        <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet">
+
+  
+    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+    /* Three columns side by side */
+    .column {
+        display: inline-block;
+        width: 33.3%;
+        margin-bottom: 16px;
+        padding: 0 8px;
+        overflow-y: auto; /* Enable vertical scrollbar */
+        max-height: 300px;
+    }
+
+    .dropdown
+    {
+        display:inline-block
+    }
+
+
+    /* Display the columns below each other instead of side by side on small screens */
+   @@media screen and (max-width: 650px) {
+        .column {
+            width: 100%;
+            display: block;
+        }
+    }
+
+    /* Add some shadows to create a card effect */
+    .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    /* Some left and right padding inside the container */
+    .container {
+        padding: 0 16px;
+    }
+
+    /* Clear floats */
+    .container::after,
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    .title {
+        color: grey;
+    }
+
+    .button {
+        border: none;
+        outline: 0;
+        display: inline-block;
+        padding: 8px;
+        color: white;
+        background-color: #000;
+        text-align: center;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    .button:hover {
+        background-color: #555;
+    }
+</style>
 
 @if (Model.UserModels != null && Model.UserModels.Count > 0)
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th> Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                </tr>
-        </thead>
-        <tbody>
-            @foreach (var groupmember in Model.UserModels)
-            {
-                <tr>
-                    <td>@groupmember.LastName</td>
-                    <td>@groupmember.Email</td>
-                    <td>@groupmember.Role</td>
-                    
+        <div class="row">
 
-                </tr>
-            }
-        </tbody>
-    </table>
+    @foreach (var groupmember in Model.UserModels)
+    {
+            <div class="column">
+              
+                <div class="container">
+                    <h2>@groupmember.LastName
+                                     <div class="dropdown">
+
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    Settings
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><form method="post" asp-page-handler="RemoveMember" asp-route-MemberId="@groupmember.UserId" asp-route-GroupId="@groupId">
+                                        <button type="submit" class="btn">
+                                            Remove
+
+                                        </button>
+                                </form></li>
+    <li><a class="dropdown-item" href="#">Another action</a></li>
+    <li><a class="dropdown-item" href="#">Something else here</a></li>
+  </ul>
+</div>
+                    </h2>
+     
+                    <p class="title">Role :@groupmember.Role</p>
+                    <p>Phone Number :@groupmember.PhoneNumber</p>
+                    <p>DOB:@groupmember.DateOfBirth</p>
+                    <p>Address:@groupmember.Address</p>
+                    <p><button class="button">Contact</button></p>
+                </div>
+            </div>
+    }
+    </div>
+
 }
 else
 {
     <p>No User found.</p>
 }
+  @if (!string.IsNullOrEmpty(TempData["Message"]?.ToString()))
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["Message"]
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(TempData["ErrorMessage"]?.ToString()))
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["ErrorMessage"]
+        </div>
+    }

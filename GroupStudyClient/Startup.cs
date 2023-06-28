@@ -1,11 +1,13 @@
 ﻿using System;
 using Repositories;
+using BusinessObject.Sub_Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.ResponseCompression;
 
 namespace GroupStudyClient
 {
@@ -39,7 +41,10 @@ namespace GroupStudyClient
                 options.Cookie.SameSite = SameSiteMode.Strict;
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
             });
+            services.AddSignalR();
+
         }
+
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -64,6 +69,7 @@ namespace GroupStudyClient
             {
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapRazorPages();
+                endpoints.MapHub<ChatHub>("/chathub");
             });
         }
     }

@@ -11,7 +11,7 @@ namespace BusinessObject.Sub_Model
     public class GroupModel
     {
         public string GroupName { get; set; }
-        public int? GroupAdminId { get; set; }
+        public int GroupAdminId { get; set; }
         public DateTime? CreatedAt { get; set; }
         public string Description { get; set; }
 

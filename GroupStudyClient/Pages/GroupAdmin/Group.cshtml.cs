@@ -20,6 +20,8 @@ namespace GroupStudyClient.Pages.GroupAdmin
         }
         [BindProperty(SupportsGet = true)]
         public int GroupId { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int MemberId { get; set; }
 
         public List<UserModel> UserModels { get; set; }
 
@@ -39,6 +41,23 @@ namespace GroupStudyClient.Pages.GroupAdmin
             }
 
             return Page();
+        }
+        public async Task<IActionResult> OnPostRemoveMemberAsync([FromQuery]int GroupId, int MemberId)
+        {
+            string removeMemberurl = $"https://localhost:44340/api/GroupAdmin/RemoveMember/{GroupId}/{MemberId}";
+            var httpClient = _clientFactory.CreateClient();
+            var response = await httpClient.DeleteAsync(removeMemberurl);
+            var content = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["Message"] = content.ToString();
+            }else
+            {
+                TempData["ErrorMessage"] = content.ToString();
+
+            }
+
+            return await OnPostGroupMemberAsync(GroupId);
         }
     }
 }
