@@ -18,6 +18,8 @@ namespace Repositories
         List<Group> SearchGroups(string keyword);
 
         List<User> GetUsers();
-      
+        List<User> GetAllGroupAdmin();
+
+
     }
 }

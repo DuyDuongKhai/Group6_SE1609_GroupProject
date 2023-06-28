@@ -27,6 +27,11 @@ namespace GroupStudyClient.Pages.Admin.UserManagement
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
             var httpClient = _clientFactory.CreateClient();
 
             // Send login request to the API

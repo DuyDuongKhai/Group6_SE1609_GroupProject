@@ -13,6 +13,7 @@ namespace Repositories
         Group GetGroupById(int id);
         void DeleteGroup(Group c);
         void UpdateGroup(Group c);
+        int GetNextId();
 
         List<User> GetUsers();
         List<Group> GetGroups();

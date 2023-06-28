@@ -107,5 +107,22 @@ namespace DataAccess
                 throw new Exception(e.Message);
             }
         }
+
+        public static int GetNextId()
+        {
+            int nextId = 0;
+            try
+            {
+                using (var context = new GroupStudyContext())
+                {
+                    nextId = context.Groups.Max(u => u.GroupId) + 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return nextId;
+        }
     }
 }

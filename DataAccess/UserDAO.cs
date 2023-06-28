@@ -9,6 +9,22 @@ namespace DataAccess
 {
     public class UserDAO
     {
+        public static List<User> GetAllGroupAdmin()
+        {
+            var listUsers = new List<User>();
+            try
+            {
+                using (var context = new GroupStudyContext())
+                {
+                    listUsers = context.Users.Where(u => u.Role == "GroupAdmin").ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return listUsers;
+        }
         public static List<User> GetUsers()
         {
             var listUsers = new List<User>();
