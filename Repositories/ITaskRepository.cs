@@ -1,9 +1,9 @@
-﻿using BusinessObject.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
+using BusinessObject.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Task = BusinessObject.Models.Task;
 
 namespace Repositories
@@ -18,5 +18,7 @@ namespace Repositories
         List<User> GetUsers();
         List<Group> GetGroups();
         List<Task> GetTasks();
+        List<Task> GetTasksByGroupId(int groupId);
+        List<Task> GetListTaskByGroupAndUserId(int groupId, int memberId);
     }
 }

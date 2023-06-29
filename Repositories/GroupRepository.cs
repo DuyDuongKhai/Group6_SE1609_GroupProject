@@ -22,5 +22,7 @@ namespace Repositories
         public Group GetGroupById(int id) => GroupDAO.FindGroupById(id);
 
         public List<Group> GetGroups() => GroupDAO.GetGroups();
+ 
+        public List<Group> GetGroupsByGroupAdminId(int groupAdminId)=>GroupDAO.GetGroupsByGroupAdminId((int)groupAdminId);
     }
 }
