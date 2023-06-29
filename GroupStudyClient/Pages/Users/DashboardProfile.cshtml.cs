@@ -17,6 +17,7 @@ namespace GroupStudyClient.Pages.Users
 
         public User User { get; set; }
 
+
         public DashboardProfileModel(IHttpClientFactory clientFactory, IConfiguration configuration)
         {
             _clientFactory = clientFactory;
@@ -40,6 +41,7 @@ namespace GroupStudyClient.Pages.Users
             {
                 var content = await response.Content.ReadAsStringAsync();
                 User = JsonConvert.DeserializeObject<User>(content);
+               
             }
             else
             {

@@ -1,64 +1,153 @@
 ﻿@page
 @model GroupStudyClient.Pages.Users.IndexModel
-<a href="/Users/DashboardProfile" class="btn btn-primary">Go to Dashboard Profile</a>
-<h1>List of Groups</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>List of Groups</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        h1 {
+            background-image: linear-gradient(to right, #ffffff, #f8f9fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-<form method="get">
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Search keyword" name="keyword" value="@Model.Keyword">
-        <div class="input-group-append">
-            <button class="btn btn-primary" type="submit">Search</button>
+        h1 {
+            text-align: center;
+        }
+
+        body {
+            background-image: radial-gradient(circle, rgba(37, 52, 97, 1) 0%, rgba(20, 28, 51, 1) 100%);
+        }
+
+        .table {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .input-group {
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+            .btn-primary:hover {
+                background-color: #0069d9;
+                border-color: #0062cc;
+            }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+            .btn-danger:hover {
+                background-color: #c82333;
+                border-color: #bd2130;
+            }
+
+        .alert {
+            margin-top: 20px;
+        }
+
+        .welcome-section {
+            background-image: radial-gradient(circle, rgba(152, 255, 152, 1) 0%, rgba(20, 28, 51, 1) 100%);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-text {
+            text-align: center;
+        }
+
+            .welcome-text h4 {
+                margin-bottom: 10px;
+            }
+
+            .welcome-text p {
+                margin-bottom: 0;
+            }
+
+        h1 {
+            background: linear-gradient(45deg, #FFC300, #FF5733); /* Thay đổi màu chữ thành gradient */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-section">
+        <div class="welcome-text">
+            <h4>Welcome, @Model.User.FirstName!</h4>
+            <p>You are: @Model.User.Role</p>
         </div>
     </div>
-</form>
+    <a href="/Login" class="btn btn-danger float-right">Logout</a>
+    <a href="/Users/DashboardProfile" class="btn btn-primary">Go to Dashboard Profile</a>
+    <h1>List of Groups</h1>
 
-@if (Model.Groups != null && Model.Groups.Count > 0)
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Group Name</th>
-                <th>Group Admin</th>
-                <th>Created At</th>
-                <th>Description</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
+    <form method="get">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Search keyword" name="keyword" value="@Model.Keyword">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+
+    @if (Model.Groups != null && Model.Groups.Count > 0)
+    {
+        <div class="row">
             @foreach (var group in Model.Groups)
             {
-                <tr>
-                    <td>@group.GroupName</td>
-                    <td>@group.GroupAdminId</td>
-                    <td>@group.CreatedAt</td>
-                    <td>@group.Description</td>
-                    <td>
-                        <form method="post" asp-page-handler="JoinGroup" asp-route-userId="@Model.UserId" asp-route-groupId="@group.GroupId">
-                            <button type="submit" class="btn btn-primary">Join Group</button>
-                        </form>
-                    </td>
-                </tr>
+                <div class="col-md-3">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">@group.GroupName</h5>
+                            <p class="card-text">Group Admin: @group.GroupAdminId</p>
+                            <p class="card-text">Created At: @group.CreatedAt</p>
+                            <p class="card-text">Description: @group.Description</p>
+                            @if (group.JoinRequests.Any(jr => jr.UserId == Model.UserId && jr.GroupId == group.GroupId))
+                            {
+                                <button type="button" class="btn btn-primary" disabled="disabled">Join Request Sent</button>
+                            }
+                            else
+                            {
+                                <form method="post" asp-page-handler="JoinGroup" asp-route-userId="@Model.UserId" asp-route-groupId="@group.GroupId">
+                                    <button type="submit" class="btn btn-primary">Join Group</button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No groups found.</p>
-}
-
-@if (!string.IsNullOrEmpty(TempData["Message"]?.ToString()))
-{
-    <div class="alert alert-success" role="alert">
-        @TempData["Message"]
-    </div>
-}
-
-@if (!string.IsNullOrEmpty(TempData["ErrorMessage"]?.ToString()))
-{
-    <div class="alert alert-danger" role="alert">
-        @TempData["ErrorMessage"]
-    </div>
-}
+        </div>
+    }
+    else
+    {
+        <p>No groups found.</p>
+    }
 
 
+    @if (!string.IsNullOrEmpty(TempData["Message"]?.ToString()))
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["Message"]
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(TempData["ErrorMessage"]?.ToString()))
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+</body>
+</html>

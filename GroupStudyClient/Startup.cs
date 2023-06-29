@@ -31,7 +31,12 @@ namespace GroupStudyClient
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddRazorPages();
+            services.AddRazorPages().AddRazorPagesOptions(options =>
+            {
+                options.RootDirectory = "/Pages";
+                options.Conventions.AddPageRoute("/Login", "");
+            });
+
 
             services.AddSession(options =>
             {
