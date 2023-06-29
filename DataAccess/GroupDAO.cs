@@ -28,6 +28,24 @@ namespace DataAccess
             }
             return listGroups;
         }
+        public static List<Group> GetGroupsByGroupAdminId(int groupAdminId)
+        {
+            var listGroups = new List<Group>();
+            try
+            {
+                using (var context = new GroupStudyContext())
+                {
+                    listGroups = context.Groups
+                       .Include(x => x.GroupAdmin)
+                       .Where(x=>x.GroupAdminId==groupAdminId).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return listGroups;
+        }
         public static Group FindGroupById(int Id)
         {
             Group c = new Group();

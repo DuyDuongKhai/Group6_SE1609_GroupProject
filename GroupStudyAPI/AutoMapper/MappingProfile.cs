@@ -22,6 +22,10 @@ namespace GroupStudyAPI.AutoMapper
            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User))
            ;
 
+            CreateMap<Task, TaskModel>().ReverseMap()
+                .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.Group))
+           .ForMember(dest => dest.AssignedToUser, opt => opt.MapFrom(src => src.AssignedToUser))
+           ;
 
         }
     }

@@ -5,7 +5,7 @@
     ViewData["Title"] = "Group Admin";
     Layout = "~/Pages/Shared/_LayoutGroupAdmin.cshtml";
     string btncolor = "#fb6a30";
-    int sessionValue = int.Parse(HttpContext.Session.GetString("UserId"));
+    int sessionValue = int.Parse(HttpContext.Session.GetString("UserId"));  
     Model.Group.GroupAdminId = sessionValue;
 
 

@@ -35,13 +35,15 @@ namespace GroupStudyClient.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
-            string GetGroupUrl = "https://localhost:44340/api/GroupAdmin";
+            var httpClient = _clientFactory.CreateClient();
+            int userId = int.Parse(HttpContext.Session.GetString("UserId"));
+
+            string GetGroupUrl = $"https://localhost:44340/api/GroupAdmin/GetAllByGroupAdminId/{userId}";
             string getAllRequestUrl = "https://localhost:44340/api/GroupAdmin/ViewJoinRequest";
 
             var token = HttpContext.Session.GetString("Token");
 
             // Add the token to the request headers
-            var httpClient = _clientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var response = await httpClient.GetAsync(GetGroupUrl);
