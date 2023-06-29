@@ -9,8 +9,10 @@ using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+
 namespace GroupStudyClient.Pages
 {
+    
     public class LoginModel : PageModel
     {
         private readonly IHttpClientFactory _clientFactory;
