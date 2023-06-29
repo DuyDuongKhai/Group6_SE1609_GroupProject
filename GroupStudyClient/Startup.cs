@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.ResponseCompression;
 
 namespace GroupStudyClient
 {
@@ -69,7 +68,7 @@ namespace GroupStudyClient
             {
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapRazorPages();
-                endpoints.MapHub<ChatHub>("/chathub");
+                endpoints.MapHub<ChatHub>("/chatHub");
             });
         }
     }
