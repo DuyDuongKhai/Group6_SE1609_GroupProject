@@ -37,7 +37,7 @@ namespace GroupStudyClient.Pages.Admin.GroupManagement
                     PropertyNameCaseInsensitive = true,
                 };
                 List<User> users = JsonSerializer.Deserialize<List<User>>(apiResponse, options);
-                ViewData["GroupAdminId"] = new SelectList(users, "UserId", "UserId");
+                ViewData["Email"] = new SelectList(users, "UserId", "Email");
                 return Page();
             }
             else
@@ -62,9 +62,9 @@ namespace GroupStudyClient.Pages.Admin.GroupManagement
             var httpClient = _clientFactory.CreateClient();
 
             // Send login request to the API
-            var jsonContent = JsonSerializer.Serialize(User);
+            var jsonContent = JsonSerializer.Serialize(Group);
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            HttpResponseMessage response = await httpClient.PostAsync($"https://localhost:44340/api/Users", content);
+            HttpResponseMessage response = await httpClient.PostAsync($"https://localhost:44340/api/Groups", content);
             if (response.IsSuccessStatusCode)
             {
                 // The flowerBouquet data was successfully updated, handle the success as needed
@@ -73,7 +73,7 @@ namespace GroupStudyClient.Pages.Admin.GroupManagement
             else
             {
                 // Handle error if needed
-                ModelState.AddModelError(string.Empty, "An error occurred while updating the user.");
+                ModelState.AddModelError(string.Empty, "An error occurred while create group admin.");
                 return Page();
             }
         }

@@ -26,6 +26,10 @@ namespace GroupStudyClient.Pages.Admin.UserManagement
 
         public IActionResult OnGet()
         {
+            List<string> roles = new List<string>();
+            roles.Add("GroupAdmin");
+            roles.Add("User");
+            ViewData["Role"] = new SelectList(roles);
             return Page();
         }
 
@@ -54,6 +58,10 @@ namespace GroupStudyClient.Pages.Admin.UserManagement
             else
             {
                 // Handle error if needed
+                List<string> roles = new List<string>();
+                roles.Add("GroupAdmin");
+                roles.Add("User");
+                ViewData["Role"] = new SelectList(roles);
                 ModelState.AddModelError(string.Empty, "An error occurred while updating the user.");
                 return Page();
             }

@@ -87,6 +87,7 @@ namespace GroupStudyAPI.Controllers
                 try
                 {
                     group.GroupId = _groupRepository.GetNextId();
+                    group.CreatedAt = DateTime.Now;
                     _groupRepository.SaveGroup(group);
                 }
                 catch (Exception ex)
