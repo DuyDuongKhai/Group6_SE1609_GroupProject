@@ -25,6 +25,7 @@ namespace Repositories
 
       
         public List<User> GetUsers() => UserDAO.GetUsers();
+        public List<User> GetAllGroupAdmin() => UserDAO.GetAllGroupAdmin();
         public int GetNextUserId()
         {
             int nextUserId = UserDAO.GetNextUserId();

@@ -7,20 +7,48 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject.Models;
+using System.Net.Http;
+using System.Text.Json;
 
 namespace GroupStudyClient.Pages.Admin.GroupManagement
 {
     public class EditModel : PageModel
     {
-        private readonly BusinessObject.Models.GroupStudyContext _context;
+        private readonly IHttpClientFactory _clientFactory;
 
-        public EditModel(BusinessObject.Models.GroupStudyContext context)
+        public EditModel(IHttpClientFactory clientFactory)
         {
-            _context = context;
+            _clientFactory = clientFactory;
         }
 
         [BindProperty]
         public Group Group { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(int? id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            var httpClient = _clientFactory.CreateClient();
+
+            // Send login request to the API
+            var response = await httpClient.GetAsync($"https://localhost:44340/api/Groups/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var apiResponse = await response.Content.ReadAsStringAsync();
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                };
+                Group = JsonSerializer.Deserialize<Group>(apiResponse, options);
+            }
+
+
+            return Page();
+        }
 
         //public async Task<IActionResult> OnGetAsync(int? id)
         //{

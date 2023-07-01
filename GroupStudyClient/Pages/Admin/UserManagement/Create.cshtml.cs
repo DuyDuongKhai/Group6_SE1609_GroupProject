@@ -6,20 +6,30 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using BusinessObject.Models;
+using System.Net.Http;
+using System.Text.Json;
+using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace GroupStudyClient.Pages.Admin.UserManagement
 {
     public class CreateModel : PageModel
     {
-        private readonly BusinessObject.Models.GroupStudyContext _context;
 
-        public CreateModel(BusinessObject.Models.GroupStudyContext context)
+        private readonly IHttpClientFactory _clientFactory;
+
+        public CreateModel(IHttpClientFactory clientFactory)
         {
-            _context = context;
+            _clientFactory = clientFactory;
+
         }
 
         public IActionResult OnGet()
         {
+            List<string> roles = new List<string>();
+            roles.Add("GroupAdmin");
+            roles.Add("User");
+            ViewData["Role"] = new SelectList(roles);
             return Page();
         }
 
@@ -34,10 +44,27 @@ namespace GroupStudyClient.Pages.Admin.UserManagement
                 return Page();
             }
 
-            _context.Users.Add(User);
-            await _context.SaveChangesAsync();
+            var httpClient = _clientFactory.CreateClient();
 
-            return RedirectToPage("./Index");
+            // Send login request to the API
+            var jsonContent = JsonSerializer.Serialize(User);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+            HttpResponseMessage response = await httpClient.PostAsync($"https://localhost:44340/api/Users", content);
+            if (response.IsSuccessStatusCode)
+            {
+                // The flowerBouquet data was successfully updated, handle the success as needed
+                return RedirectToPage("/Admin/UserManagement/Index");
+            }
+            else
+            {
+                // Handle error if needed
+                List<string> roles = new List<string>();
+                roles.Add("GroupAdmin");
+                roles.Add("User");
+                ViewData["Role"] = new SelectList(roles);
+                ModelState.AddModelError(string.Empty, "An error occurred while updating the user.");
+                return Page();
+            }
         }
     }
 }

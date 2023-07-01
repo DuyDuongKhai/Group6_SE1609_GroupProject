@@ -86,6 +86,8 @@ namespace GroupStudyAPI.Controllers
             {
                 try
                 {
+                    group.GroupId = _groupRepository.GetNextId();
+                    group.CreatedAt = DateTime.Now;
                     _groupRepository.SaveGroup(group);
                 }
                 catch (Exception ex)
@@ -93,7 +95,7 @@ namespace GroupStudyAPI.Controllers
                     return BadRequest(ex.Message);
                 }
             }
-            return CreatedAtAction("GetCustomer", new { id = group.GroupId }, group);
+            return Ok();
         }
 
         // DELETE: api/Groups/5

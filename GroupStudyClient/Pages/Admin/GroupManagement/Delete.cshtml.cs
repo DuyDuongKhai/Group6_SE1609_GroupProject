@@ -6,54 +6,74 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject.Models;
+using System.Net.Http;
+using System.Text.Json;
 
 namespace GroupStudyClient.Pages.Admin.GroupManagement
 {
     public class DeleteModel : PageModel
     {
-        private readonly BusinessObject.Models.GroupStudyContext _context;
+        private readonly IHttpClientFactory _clientFactory;
 
-        public DeleteModel(BusinessObject.Models.GroupStudyContext context)
+        public DeleteModel(IHttpClientFactory clientFactory)
         {
-            _context = context;
+            _clientFactory = clientFactory;
+
         }
 
         [BindProperty]
         public Group Group { get; set; }
 
-        //public async Task<IActionResult> OnGetAsync(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
 
-        //    Group = await _context.Groups
-        //        .Include(@ => @.GroupAdmin).FirstOrDefaultAsync(m => m.GroupId == id);
+        public async Task<IActionResult> OnGetAsync(int? id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
 
-        //    if (Group == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return Page();
-        //}
+            var httpClient = _clientFactory.CreateClient();
 
-        //public async Task<IActionResult> OnPostAsync(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+            // Send login request to the API
+            var response = await httpClient.GetAsync($"https://localhost:44340/api/Groups/{id}");
+            if (response.IsSuccessStatusCode)
+            {
+                var apiResponse = await response.Content.ReadAsStringAsync();
 
-        //    Group = await _context.Groups.FindAsync(id);
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                };
+                Group = JsonSerializer.Deserialize<Group>(apiResponse, options);
+            }
 
-        //    if (Group != null)
-        //    {
-        //        _context.Groups.Remove(Group);
-        //        await _context.SaveChangesAsync();
-        //    }
 
-        //    return RedirectToPage("./Index");
-        //}
+            return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync(int? id)
+        {
+            var httpClient = _clientFactory.CreateClient();
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            var jsonContent = JsonSerializer.Serialize(Group);
+
+            HttpResponseMessage response = await httpClient.DeleteAsync($"https://localhost:44340/api/Groups/{Group.GroupId}\r\n");
+            if (response.IsSuccessStatusCode)
+            {
+                // The flowerBouquet data was successfully updated, handle the success as needed
+                return RedirectToPage("/Admin/GroupManagement/Index");
+            }
+            else
+            {
+                // Handle error if needed
+                ModelState.AddModelError(string.Empty, "An error occurred while deleting the group.");
+                return Page();
+            }
+        }
     }
 }

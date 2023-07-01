@@ -6,16 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using BusinessObject.Models;
+using System.Text.Json;
+using System.Net.Http;
+using System.Text;
 
 namespace GroupStudyClient.Pages.Admin.UserManagement
 {
     public class DeleteModel : PageModel
     {
-        private readonly BusinessObject.Models.GroupStudyContext _context;
+        private readonly IHttpClientFactory _clientFactory;
 
-        public DeleteModel(BusinessObject.Models.GroupStudyContext context)
+        public DeleteModel(IHttpClientFactory clientFactory)
         {
-            _context = context;
+            _clientFactory = clientFactory;
+
         }
 
         [BindProperty]
@@ -23,36 +27,53 @@ namespace GroupStudyClient.Pages.Admin.UserManagement
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return Page();
             }
 
-            User = await _context.Users.FirstOrDefaultAsync(m => m.UserId == id);
+            var httpClient = _clientFactory.CreateClient();
 
-            if (User == null)
+            // Send login request to the API
+            var response = await httpClient.GetAsync($"https://localhost:44340/api/Users/{id}");
+            if (response.IsSuccessStatusCode)
             {
-                return NotFound();
+                var apiResponse = await response.Content.ReadAsStringAsync();
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                };
+                User = JsonSerializer.Deserialize<User>(apiResponse, options);
             }
+
+
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null)
+            var httpClient = _clientFactory.CreateClient();
+
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return Page();
             }
 
-            User = await _context.Users.FindAsync(id);
+            var jsonContent = JsonSerializer.Serialize(User);
 
-            if (User != null)
+            HttpResponseMessage response = await httpClient.DeleteAsync($"https://localhost:44340/api/Users/{User.UserId}\r\n");
+            if (response.IsSuccessStatusCode)
             {
-                _context.Users.Remove(User);
-                await _context.SaveChangesAsync();
+                // The flowerBouquet data was successfully updated, handle the success as needed
+                return RedirectToPage("/Admin/UserManagement/Index");
             }
-
-            return RedirectToPage("./Index");
+            else
+            {
+                // Handle error if needed
+                ModelState.AddModelError(string.Empty, "An error occurred while deleting the user.");
+                return Page();
+            }
         }
     }
 }

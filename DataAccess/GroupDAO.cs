@@ -53,12 +53,10 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-
                     c = context.Groups
                         .Include(x=>x.GroupAdmin)
                         .Include(x=>x.JoinRequests)
                         .SingleOrDefault(x => x.GroupId == Id);
-
 
                 }
             }
@@ -126,6 +124,23 @@ namespace DataAccess
             {
                 throw new Exception(e.Message);
             }
+        }
+
+        public static int GetNextId()
+        {
+            int nextId = 0;
+            try
+            {
+                using (var context = new GroupStudyContext())
+                {
+                    nextId = context.Groups.Max(u => u.GroupId) + 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return nextId;
         }
     }
 }

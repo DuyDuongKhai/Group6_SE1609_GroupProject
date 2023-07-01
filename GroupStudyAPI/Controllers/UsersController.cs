@@ -24,6 +24,14 @@ namespace GroupStudyAPI.Controllers
 
         }
 
+        // GET: api/GroupAdmin
+        [HttpGet]
+        [Route("GroupAdmin")]
+        public ActionResult<IEnumerable<User>> GetGroupAdmin()
+        {
+            return _userRepository.GetAllGroupAdmin();
+        }
+
         // GET: api/Users
         [HttpGet]
         public ActionResult<IEnumerable<User>> GetUsers()
@@ -80,7 +88,7 @@ namespace GroupStudyAPI.Controllers
         [HttpPost]
         public ActionResult<User> PostUser(User user)
         {
-            if (UserExists(user.UserId))
+            if (_userRepository.GetUserByEmail(user.Email) != null)
             {
                 return Conflict();
             }
@@ -88,6 +96,7 @@ namespace GroupStudyAPI.Controllers
             {
                 try
                 {
+                    user.UserId = _userRepository.GetNextUserId();
                     _userRepository.SaveUser(user);
                 }
                 catch (Exception ex)
@@ -95,7 +104,7 @@ namespace GroupStudyAPI.Controllers
                     return BadRequest(ex.Message);
                 }
             }
-            return CreatedAtAction("GetCustomer", new { id = user.UserId }, user);
+            return Ok();
         }
 
         // DELETE: api/Users/5
