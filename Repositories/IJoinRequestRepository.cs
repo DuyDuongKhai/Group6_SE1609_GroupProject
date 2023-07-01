@@ -20,5 +20,6 @@ namespace Repositories
         List<JoinRequest> GetJoinRequests();
         List<JoinRequest> ListJoinRequestByGroupId(int groupId);
         int GetRequestId(int groupId, int memberId);
+        bool CheckJoinRequest(int requestId);
     }
 }

@@ -1,9 +1,10 @@
-﻿using BusinessObject.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Text;
+using BusinessObject.Models;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using Task = BusinessObject.Models.Task;
 
 namespace DataAccess
@@ -17,7 +18,10 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    listTasks = context.Tasks.ToList();
+                    listTasks = context.Tasks
+                        .Include(x=>x.Group)
+                        .Include(x=>x.AssignedToUser)
+                        .ToList();
                 }
             }
             catch (Exception ex)
@@ -34,7 +38,10 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    task = context.Tasks.SingleOrDefault(x => x.TaskId == id);
+                    task = context.Tasks
+                        .Include(x=>x.AssignedToUser)
+                        .Include(x=>x.Group)
+                        .SingleOrDefault(x => x.TaskId == id);
                 }
             }
             catch (Exception ex)
@@ -103,7 +110,13 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    nextTaskId = context.Tasks.Max(u => u.TaskId) + 1;
+                    if (context.Tasks.Count() > 0)
+                    {
+                        nextTaskId = context.Tasks.Max(u => u.TaskId) + 1;
+                    }else
+                    {
+                        nextTaskId = 0;
+                    }
                 }
             }
             catch (Exception ex)
@@ -112,5 +125,43 @@ namespace DataAccess
             }
             return nextTaskId;
         }
+
+        public static List<Task> GetListTaskByGroupId(int groupId)
+        {
+            var list = new List<Task>();
+            
+                using (var context= new GroupStudyContext())
+                {
+                    list= context.Tasks
+                        .Include(x=>x.Group)
+                        .Include(x=>x.AssignedToUser)
+                        .Where(x=>x.GroupId== groupId).ToList();
+                }
+                if(list.Count()>0)
+            {
+                return list;
+            }
+            return new List<Task>();
+            
+        }
+        public static List<Task> GetListTaskByGroupAndUserId(int groupId,int memberId)
+        {
+            var list = new List<Task>();
+
+            using (var context = new GroupStudyContext())
+            {
+                list = context.Tasks
+                    .Include(x => x.Group)
+                    .Include(x => x.AssignedToUser)
+                    .Where(x => x.GroupId == groupId&& x.AssignedToUserId==memberId).ToList();
+            }
+            if (list.Count() > 0)
+            {
+                return list;
+            }
+            return new List<Task>();
+
+        }
+
     }
 }

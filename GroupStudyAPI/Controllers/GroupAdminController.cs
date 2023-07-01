@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using BusinessObject.Sub_Model;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Routing;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Authorization;
 
 namespace GroupStudyAPI.Controllers
@@ -23,7 +25,8 @@ namespace GroupStudyAPI.Controllers
         private readonly IJoinRequestRepository joinRequestRepository;
         private readonly IPostRepository postRepository;
         private readonly IMapper _mapper;
-        public GroupAdminController(IGroupRepository groupRepository, IUserRepository userRepository, IGroupMemberRepository groupMemberRepository, IJoinRequestRepository joinRequestRepository,IMapper mapper,IPostRepository postRepository)
+        private readonly ITaskRepository taskRepository;
+        public GroupAdminController(IGroupRepository groupRepository, IUserRepository userRepository, IGroupMemberRepository groupMemberRepository, IJoinRequestRepository joinRequestRepository,IMapper mapper,IPostRepository postRepository,ITaskRepository taskRepository)
         {
             this.groupRepository = groupRepository;
             this.userRepository = userRepository;
@@ -31,6 +34,7 @@ namespace GroupStudyAPI.Controllers
             this.joinRequestRepository = joinRequestRepository;
             this.postRepository = postRepository;
             _mapper = mapper;
+            this.taskRepository = taskRepository;
         }
 
         [HttpPost]
@@ -72,12 +76,13 @@ namespace GroupStudyAPI.Controllers
             return Ok("Create Group success");
         }
         [HttpGet]
-        public async Task<List<Group>> GetAll()
+       [Route("GetAllByGroupAdminId/{groupAdminId}")]
+        public async Task<List<Group>> GetAllByAdminId(int groupAdminId)
         {
             var list=new List<Group>();
             try
             {
-                list = groupRepository.GetGroups();
+                list = groupRepository.GetGroupsByGroupAdminId(groupAdminId);
             }catch(Exception ex)
             {
                 throw new Exception(ex.Message, ex);
@@ -164,11 +169,18 @@ namespace GroupStudyAPI.Controllers
                 Status= "Approved"
             };
             var joinRequest = _mapper.Map<JoinRequest>(joinRequestModel);
+            var checkJr = joinRequestRepository.CheckJoinRequest(joinRequestModel.RequestId);
             try
             {
-                joinRequestRepository.UpdateJoinRequest(joinRequest);
-              await AddMember(groupId,memberId );
-                msg = "Approve and Added to group";
+                if (!checkJr)
+                {
+                    joinRequestRepository.UpdateJoinRequest(joinRequest);
+                    await AddMember(groupId, memberId);
+                    msg = "Approve and Added to group";
+                }else
+                {
+                    throw new Exception("Already Approved");
+                }
             }catch(Exception ex)
             {
                 msg = ex.Message;   
@@ -182,17 +194,26 @@ namespace GroupStudyAPI.Controllers
         {
             var msg = "";
             int requestId = joinRequestRepository.GetRequestId(groupId, memberId);
+
             JoinRequestModel joinRequestModel = new JoinRequestModel
             {
                 
                 GroupId = groupId,
                 UserId = memberId,
             };
+            var checkJr = joinRequestRepository.CheckJoinRequest(requestId);
             var joinRequest = _mapper.Map<JoinRequest>(joinRequestModel);
             try
             {
-                joinRequestRepository.DeleteJoinRequest(joinRequest);
-                msg = "Disapprove";
+                if (!checkJr)
+                {
+                    joinRequestRepository.DeleteJoinRequest(joinRequest);
+                    msg = "Disapprove";
+                }
+                else
+                {
+                    throw new Exception("Can't dissapprove when it already approved");
+                }
             }
             catch (Exception ex)
             {
@@ -307,7 +328,69 @@ namespace GroupStudyAPI.Controllers
             return Ok("Delete Post success");
         }
 
-        
-        
+        [HttpPost]
+        [Route("AssignTask")]
+        public async Task<IActionResult> AssignTaskToMember(TaskModel task)
+        {
+            var msg = "";
+            try
+            {
+                var user = userRepository.GetUserById((int)task.AssignedToUserId);
+                var group = groupRepository.GetGroupById((int)task.GroupId);
+                if (user == null)
+                {
+                    return BadRequest("No user to assign");
+                }
+                else if (group == null)
+                {
+                    return BadRequest("No group exist");
+                }
+                BusinessObject.Models.Task newTask = _mapper.Map<BusinessObject.Models.Task>(task); 
+                newTask.TaskId= taskRepository.GetNextTaskId();
+                taskRepository.SaveTask(newTask);
+                var getTask = taskRepository.GetTaskById(newTask.TaskId);
+                msg = $"Assign success to User {getTask.AssignedToUser.LastName} from Group {getTask.Group.GroupName}";
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+
+            return Ok(msg);
+        }
+        [HttpGet]
+        [Route("GetTasksByGroupId/{groupId}")]
+        public async Task<IActionResult> GetTasksByGroupId(int groupId)
+        {
+            List<TaskModel> list = _mapper.Map<List<TaskModel>>(taskRepository.GetTasksByGroupId(groupId));
+            return Ok(list);
+        }
+
+        [HttpGet]
+        [Route("GetTasksByGroupAndUserId/{groupId}/{memberId}")]
+        public async Task<IActionResult> GetTasksByGroupId(int groupId,int memberId)
+        {
+            List<TaskModel> list = _mapper.Map<List<TaskModel>>(taskRepository.GetListTaskByGroupAndUserId(groupId,memberId));
+            return Ok(list);
+        }
+
+        [HttpDelete]
+        [Route("DeleteTask/{taskId}")]
+        public async Task<IActionResult> DeleteTask(int taskId)
+        {
+            var task = taskRepository.GetTaskById(taskId);
+            try
+            {
+                task.Status = "Deleted";
+                taskRepository.UpdateTask(task);
+            }catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok("Delete Success");
+        }
+
+
+
     }
 }

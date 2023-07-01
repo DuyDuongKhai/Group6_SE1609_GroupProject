@@ -29,6 +29,7 @@ namespace Repositories
         {
             JoinRequestDAO.SaveJoinRequest(joinRequest);
         }
+        public bool CheckJoinRequest(int requestId)=> JoinRequestDAO.CheckJoinRequest(requestId);
 
     }
 }

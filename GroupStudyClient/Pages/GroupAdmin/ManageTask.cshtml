@@ -1,0 +1,93 @@
+﻿@page
+@model GroupStudyClient.Pages.GroupAdmin.ManageTaskModel
+@{
+    Layout = "~/Pages/Shared/_LayoutGroupAdmin1.cshtml";
+    
+
+}
+
+
+<form method="get" >
+    <div class="form-group">
+        <label for="groupId">Group Name:</label>
+        @Html.DropDownListFor(m => m.GroupId, ViewData["GroupsSelectList"] as SelectList, "-- Select Group to view task --", new { @class = "form-control" })
+    </div>
+
+    <!-- Rest of the form fields -->
+
+    <button type="submit" class="btn btn-primary">Find</button>
+    </form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Tasks[0].TaskTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tasks[1].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tasks[2].AssignedToUser.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tasks[3].Group.GroupName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model=>model.Tasks[4].Status);
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Tasks)
+        {
+            int progressPercentage = 0;
+            string progressText = "";
+
+            switch (item.Status)
+            {
+                case "Assigned":
+                    progressPercentage = 0;
+                    progressText = "Assigned";
+                    break;
+                case "Ongoing":
+                    progressPercentage = 50;
+                    progressText = "Ongoing";
+                    break;
+                case "Done":
+                    progressPercentage = 100;
+                    progressText = "Done";
+                    break;
+                default:
+                    progressPercentage = 0;
+                    progressText = "Unknown";
+                    break;
+            }
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TaskTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssignedToUser.FirstName)
+                    @Html.DisplayFor(modelItem => item.AssignedToUser.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Group.GroupName)
+                </td>
+                <td>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: @progressPercentage%;" aria-valuenow="@progressPercentage" aria-valuemin="0" aria-valuemax="100">@progressText</div>
+                    </div>
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.GroupId">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.GroupId">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.GroupId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

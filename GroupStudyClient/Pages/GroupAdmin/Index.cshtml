@@ -1,7 +1,16 @@
 ﻿@page
+@using Microsoft.AspNetCore.Http;
 @model GroupAdminIndexModel
 @{
     ViewData["Title"] = "Group Admin";
+    Layout = "~/Pages/Shared/_LayoutGroupAdmin.cshtml";
+    string btncolor = "#fb6a30";
+    int sessionValue = int.Parse(HttpContext.Session.GetString("UserId"));  
+    Model.Group.GroupAdminId = sessionValue;
+
+
+
+
 }
 <style>
     .join-request-list {
@@ -29,46 +38,106 @@
     .approve {
         color: green;
     }
-</style>
-@if (Model.Groups != null && Model.Groups.Count > 0)
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Group Id</th>
-                <th>Group Name</th>
-                <th>Group Admin</th>
-                <th>Created At</th>
-                <th>Description</th>
-                <th>Join Group</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var group in Model.Groups)
-            {
-                <tr>
-                    <td>@group.GroupId</td>
-                    <td>@group.GroupName</td>
-                    <td>@group.GroupAdminId</td>
-                    <td>@group.CreatedAt</td>
-                    <td>@group.Description</td>
-                    <td>
-                        <form method="post" asp-page="/GroupAdmin/Group" asp-page-handler="GroupMember" asp-route-GroupId="@group.GroupId">
-                            <button type="submit" class="btn btn-primary">Join</button>
-                        </form>
-                    </td>
 
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No groups found.</p>
-}
-<div class="sidebar">
-    <h4>Join Requests</h4>
+    .button-27 {
+        appearance: none;
+        background-color: #000000;
+        border: 2px solid #1A1A1A;
+        border-radius: 15px;
+        box-sizing: border-box;
+        color: #FFFFFF;
+        cursor: pointer;
+        display: inline-block;
+        font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+        font-size: 16px;
+        font-weight: 600;
+        line-height: normal;
+        margin: 0;
+        min-height: 60px;
+        min-width: 0;
+        outline: none;
+        padding: 16px 24px;
+        text-align: center;
+        text-decoration: none;
+        transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        width: 100%;
+        will-change: transform;
+    }
+
+        .button-27:disabled {
+            pointer-events: none;
+        }
+
+        .button-27:hover {
+            box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+            transform: translateY(-2px);
+             background-color: white; /* Change the background color to white */
+        color: black; /* Change the text color to black */
+        }
+
+        .button-27:active {
+            box-shadow: none;
+            transform: translateY(0);
+        }
+
+
+</style>
+
+
+<button type="button" class="button-27" data-toggle="modal" data-target="#groupModal">
+    Create Group Form
+</button>
+
+<div class="modal fade" id="groupModal" tabindex="-1" role="dialog" aria-labelledby="groupModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="groupModalLabel">Create Group</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="CreateGroup">
+                    <div>
+                        <label for="GroupName">Group Name:</label>
+                        <input type="text" id="GroupName" name="GroupName" required />
+                    </div>
+                    <div>
+                        <label for="GroupAdminId">Group Admin ID:</label>
+                        <input type="number" id="GroupAdminId" name="GroupAdminId" value="@Model.Group.GroupAdminId" disabled />
+                    </div>
+                    <div>
+                        <label for="CreatedAt">Created At:</label>
+                        <input type="datetime-local" id="CreatedAt" name="CreatedAt" />
+                    </div>
+                    <div>
+                        <label for="Description">Description:</label>
+                        <textarea id="Description" name="Description"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Create Group</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<button class="button-27" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">View Join Requests</button>
+
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Join Request</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <p>Click here to approve or dissaprove join requests</p>
+        <div class="sidebar">
+   
     <div class="join-request-list">
         @foreach (var joinRequest in Model.JoinRequests)
         {
@@ -81,12 +150,12 @@ else
                 <br>
                         <span>
                     <form method="post" asp-page-handler="Approve" asp-route-userId="@joinRequest.UserId" asp-route-groupId="@joinRequest.GroupId">
-                                <button type="submit" class="btn btn-primary">Approve</button>
+                                <button type="submit" class="button-27">Approve</button>
                             </form>
                         
                 
                     <form method="post" asp-page-handler="Disapprove" asp-route-userId="@joinRequest.UserId" asp-route-groupId="@joinRequest.GroupId">
-                        <button type="submit" class="btn btn-primary">Disapprove</button>
+                                <button type="submit" class="button-27">Disapprove</button>
                     </form>
                 </span>
             </div>
@@ -106,3 +175,60 @@ else
         </div>
     }
 </div>
+
+    </div>
+</div>
+<!-- partial:index.partial.html -->
+
+<!-- partial -->
+<h2 class="big-heading">Groups</h2>
+
+@if (Model.Groups != null && Model.Groups.Count > 0)
+{
+    @foreach (var group in Model.Groups)
+    {
+        <div class="table">
+            <h2 class="heading">
+                @group.GroupName
+            </h2>
+            <div class="block">
+                <p>
+                    Group Admin
+                    <span class="price">
+                        @group.GroupAdmin.LastName
+                    </span>
+               
+                </p>
+            </div>
+            <div class="block">
+                <p>
+                    Created At
+                    <br>
+                    <span class="price">
+                        @group.CreatedAt
+                    </span>
+                </p>
+            </div>
+            <div class="block">
+                <p>
+                    Description
+                    <span class="price">
+                        @group.Description
+                    </span>
+                </p>
+            </div>
+            <form method="post" asp-page="/GroupAdmin/Group" asp-page-handler="GroupMember" asp-route-GroupId="@group.GroupId" >
+
+            <button type="submit" class="btn">
+                        Join Group
+                
+            </button>
+            </form>
+
+        </div>
+    }
+}
+else
+{
+    <p>No groups found.</p>
+}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Net.Http;
 using Newtonsoft.Json;
 using BusinessObject.Models;
@@ -23,6 +24,8 @@ namespace GroupStudyClient.Pages
             _clientFactory = clientFactory;
         }
         public List<Group> Groups { get; set; }
+        [BindProperty(SupportsGet =true)]
+        public GroupModel Group { get; set; }
         public List<JoinRequestModel> JoinRequests { get; set; }
         [BindProperty(SupportsGet = true)]
         public int GroupId { get; set; }
@@ -32,13 +35,15 @@ namespace GroupStudyClient.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
-            string GetGroupUrl = "https://localhost:44340/api/GroupAdmin";
+            var httpClient = _clientFactory.CreateClient();
+            int userId = int.Parse(HttpContext.Session.GetString("UserId"));
+
+            string GetGroupUrl = $"https://localhost:44340/api/GroupAdmin/GetAllByGroupAdminId/{userId}";
             string getAllRequestUrl = "https://localhost:44340/api/GroupAdmin/ViewJoinRequest";
 
             var token = HttpContext.Session.GetString("Token");
 
             // Add the token to the request headers
-            var httpClient = _clientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var response = await httpClient.GetAsync(GetGroupUrl);
@@ -63,8 +68,44 @@ namespace GroupStudyClient.Pages
             }
             return Page();
         }
+        public async Task<IActionResult> OnPostCreateGroupAsync(GroupModel newGroup)
+        {
+            var httpClient = _clientFactory.CreateClient();
+            GroupModel group = new GroupModel
+            {
+                GroupName= newGroup.GroupName,
+                GroupAdminId = int.Parse(HttpContext.Session.GetString("UserId")),
+                CreatedAt=newGroup.CreatedAt,
+                Description=newGroup.Description,  
+        };
+
+            string apiUrl = "https://localhost:44340/api/GroupAdmin/CreateGroup";
+
+            // Serialize the newGroup object to JSON
+            string jsonPayload = JsonConvert.SerializeObject(group);
+
+            // Create the request content
+            StringContent requestContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            // Send the POST request
+            HttpResponseMessage response = await httpClient.PostAsync(apiUrl, requestContent);
+
+            // Check if the request was successful
+            if (response.IsSuccessStatusCode)
+            {
+                // Handle the successful response (e.g., redirect to a success page)
+                return RedirectToPage();
+            }
+
+            // Handle the failure response (e.g., show an error message)
+            var responseContent = await response.Content.ReadAsStringAsync();
+            // Log or handle the error accordingly
+            TempData["ErrorMessage"] = responseContent.ToString();
+            return Page();
+        }
         public async Task<IActionResult> OnPostApproveAsync(int UserId, int GroupId)
         {
+
             var apiUrl = $"https://localhost:44340/api/GroupAdmin/ApproveRequest/{UserId}/{GroupId}";
 
            

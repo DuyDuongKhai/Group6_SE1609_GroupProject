@@ -6,6 +6,7 @@ using GroupStudyAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using GroupStudyAPI.AutoMapper;
+using BusinessObject.Sub_Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -88,7 +89,6 @@ namespace GroupStudyAPI
 
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
-
 
 
 

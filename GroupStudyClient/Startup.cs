@@ -1,5 +1,6 @@
 ﻿using System;
 using Repositories;
+using BusinessObject.Sub_Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,7 +31,12 @@ namespace GroupStudyClient
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddRazorPages();
+            services.AddRazorPages().AddRazorPagesOptions(options =>
+            {
+                options.RootDirectory = "/Pages";
+                options.Conventions.AddPageRoute("/Login", "");
+            });
+
 
             services.AddSession(options =>
             {
@@ -39,7 +45,10 @@ namespace GroupStudyClient
                 options.Cookie.SameSite = SameSiteMode.Strict;
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
             });
+            services.AddSignalR();
+
         }
+
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -64,6 +73,7 @@ namespace GroupStudyClient
             {
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapRazorPages();
+                endpoints.MapHub<ChatHub>("/chatHub");
             });
         }
     }
