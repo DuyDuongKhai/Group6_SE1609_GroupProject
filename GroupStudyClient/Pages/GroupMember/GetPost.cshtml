@@ -1,44 +1,114 @@
-﻿
-@page
+﻿@page
 @using BusinessObject.Models
 @model GroupStudyClient.Pages.GroupMember.GetPostModel
 
-@{
-    ViewData["Title"] = "Get Post";
-}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Post</title>
+    <style>
+        body {
+            background-image: radial-gradient(circle, rgba(37,52,97,1) 0%, rgba(20,28,51,1) 100%);
+            color: white;
+        }
 
-<h1>Get Post</h1>
+        h1 {
+            background: linear-gradient(45deg, #FFC300, #FF5733);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+        }
 
-@if (ViewData["Posts"] != null)
-{
-    <h2>Posts</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Post ID</th>
-                <th>Group ID</th>
-                <th>User ID</th>
-                <th>Content</th>
-                <th>Actions</th> <!-- Thêm cột Actions -->
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var post in (List<Post>)ViewData["Posts"])
-            {
-                <tr>
-                    <td>@post.PostId</td>
-                    <td>@post.GroupId</td>
-                    <td>@post.UserId</td>
-                    <td>@post.Content</td>
-                    <td>
-                        <a href="/GroupMember/CreateComment?postId=@post.PostId">Comment</a> <!-- Thêm nút Comment với postId tương ứng -->
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No posts found.</p>
-}
+        .form {
+            background-color: white;
+            border: 1px solid #808080;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 16px;
+        }
+
+        table {
+            margin-top: 16px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid white;
+            color: black;
+        }
+
+        th {
+            background-color: #FF5733;
+            font-weight: bold;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.1); /* Màu nền dòng chẵn */
+        }
+
+        tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.2); /* Màu nền dòng hover */
+        }
+
+        td {
+            color: black;
+        }
+
+        a {
+            color: #FFC300;
+            text-decoration: none;
+        }
+
+        p {
+            margin-top: 16px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Get Post</h1>
+
+    <div class="form">
+        @if (ViewData["Posts"] != null)
+        {
+            <h2>Posts</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Post ID</th>
+                        <th>Group ID</th>
+                        <th>User ID</th>
+                        <th>Content</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var post in (List<Post>)ViewData["Posts"])
+                    {
+                        <tr>
+                            <td>@post.PostId</td>
+                            <td>@post.GroupId</td>
+                            <td>@post.UserId</td>
+                            <td>@post.Content</td>
+                            <td>
+                                <a href="/GroupMember/CreateComment?postId=@post.PostId">Comment</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No posts found.</p>
+        }
+    </div>
+</body>
+</html>
