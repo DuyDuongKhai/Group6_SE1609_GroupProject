@@ -11,8 +11,10 @@
 <p>
     @*<a asp-page="Create">Create New</a>*@
 </p>
-<table class="table">
-    <thead>
+<div class="card">
+     <div class="card-body">
+<table id="dtBasicExample" class="table table-striped" cellspacing="0" width="100%">
+    <thead class="thead-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.ChatMessage[0].Content)
@@ -30,26 +32,37 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.ChatMessage) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Content)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SentAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Group.GroupName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.Email)
-            </td>
-            <td>
-                @*<a asp-page="./Edit" asp-route-id="@item.MessageId">Edit</a> |*@
-                <a asp-page="./Details" asp-route-id="@item.MessageId">Details</a> 
-                @*<a asp-page="./Delete" asp-route-id="@item.MessageId">Delete</a>*@
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.ChatMessage)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Content)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SentAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Group.GroupName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.Email)
+                </td>
+                <td>
+                    <a asp-page="./Details" asp-route-id="@item.MessageId" class="btn btn-info">Details</a> 
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+</div>
+</div>
+@section Scripts {
+   
+
+    <script>
+        $(document).ready(function () {
+            $('#dtBasicExample').DataTable();
+            $('.dataTables_length').addClass('bs-select');
+        });
+    </script>
+}
