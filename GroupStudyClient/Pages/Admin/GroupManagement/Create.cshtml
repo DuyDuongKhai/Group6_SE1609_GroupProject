@@ -10,29 +10,37 @@
 
 <h4>Group</h4>
 <hr />
+
 <div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
-            <div class="form-group">
-                <label asp-for="Group.GroupName" class="control-label"></label>
-                <input asp-for="Group.GroupName" class="form-control" required />
-                <span asp-validation-for="Group.GroupName" class="text-danger"></span>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Group.GroupName" class="control-label">Group Name</label>
+                        <input asp-for="Group.GroupName" class="form-control" required />
+                        <span asp-validation-for="Group.GroupName" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Group.GroupAdminId" class="control-label">Group Admin</label>
+                        <select asp-for="Group.GroupAdminId" class="form-control" asp-items="ViewBag.Email"></select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="Group.Description" class="control-label">Description</label>
+                        <input asp-for="Group.Description" class="form-control" />
+                        <span asp-validation-for="Group.Description" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Group.GroupAdminId" class="control-label"></label>
-                <select asp-for="Group.GroupAdminId" class ="form-control" asp-items="ViewBag.Email"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Group.Description" class="control-label"></label>
-                <input asp-for="Group.Description" class="form-control" />
-                <span asp-validation-for="Group.Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
