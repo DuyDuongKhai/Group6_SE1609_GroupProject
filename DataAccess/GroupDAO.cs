@@ -35,7 +35,12 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    c = context.Groups.SingleOrDefault(x => x.GroupId == Id);
+
+                    c = context.Groups
+                        .Include(x=>x.GroupAdmin)
+                        .Include(x=>x.JoinRequests)
+                        .SingleOrDefault(x => x.GroupId == Id);
+
 
                 }
             }
@@ -57,7 +62,7 @@ namespace DataAccess
                 using (var context = new GroupStudyContext())
                 {
                     var user = context.Users.SingleOrDefault(x => x.UserId == c.GroupAdminId);
-                    if (user.Role.Equals("Group Admin"))
+                    if (user.Role.Equals("GroupAdmin"))
                     {
                         context.Groups.Add(c);
                         context.SaveChanges();

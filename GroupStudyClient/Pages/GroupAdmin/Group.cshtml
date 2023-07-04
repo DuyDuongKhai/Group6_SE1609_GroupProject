@@ -1,0 +1,33 @@
+﻿@page
+@model GroupStudyClient.Pages.GroupAdmin.GroupModel
+@{
+}
+
+@if (Model.UserModels != null && Model.UserModels.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th> Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                </tr>
+        </thead>
+        <tbody>
+            @foreach (var groupmember in Model.UserModels)
+            {
+                <tr>
+                    <td>@groupmember.LastName</td>
+                    <td>@groupmember.Email</td>
+                    <td>@groupmember.Role</td>
+                    
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No User found.</p>
+}
