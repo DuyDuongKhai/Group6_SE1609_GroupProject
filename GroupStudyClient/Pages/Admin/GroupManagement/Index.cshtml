@@ -9,10 +9,12 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-page="Create">Create New</a>
+    <a asp-page="Create" class="btn btn-primary">Create New</a>
 </p>
-<table class="table">
-    <thead>
+<div class="card">
+     <div class="card-body">
+<table id="dtBasicExample" class="table table-striped" cellspacing="0" width="100%">
+    <thead class="thead-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Group[0].GroupName)
@@ -30,26 +32,40 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Group) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.GroupName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GroupAdmin.Email)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.GroupId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.GroupId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.GroupId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Group)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GroupName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GroupAdmin.Email)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.GroupId" class="btn btn-primary">Edit</a>
+                    <a asp-page="./Details" asp-route-id="@item.GroupId" class="btn btn-info">Details</a>
+                    <a asp-page="./Delete" asp-route-id="@item.GroupId" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+</div>
+</div>
+
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            $('#dtBasicExample').DataTable();
+            $('.dataTables_length').addClass('bs-select');
+        });
+    </script>
+}

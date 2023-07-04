@@ -8,61 +8,64 @@
 
 <h1>Details</h1>
 
-<div>
-    <h4>User</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.Email)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.Email)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.Password)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.Password)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.Role)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.Role)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.FirstName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.FirstName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.LastName)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.LastName)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.DateOfBirth)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.DateOfBirth)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.PhoneNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.PhoneNumber)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.User.Address)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.User.Address)
-        </dd>
-    </dl>
+<div class="card mb-4">
+    <div class="card-body">
+        <h4 class="card-title">User</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">
+                <strong>Email</strong>
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.Email)
+            </dd>
+            <dt class="col-sm-3">
+                <strong>Password</strong>
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.Password)
+            </dd>
+            <dt class="col-sm-3">
+                <strong>Role</strong>
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.Role)
+            </dd>
+            <dt class="col-sm-3">
+                <strong>First Name</strong>
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.FirstName)
+            </dd>
+            <dt class="col-sm-3">
+                <strong>Last Name</strong>
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.LastName)
+            </dd>
+            <dt class="col-sm-3">
+                <strong>Date of Birth</strong>
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.DateOfBirth)
+            </dd>
+            <dt class="col-sm-3">
+                <strong>Phone Number</strong>
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.PhoneNumber)
+            </dd>
+            <dt class="col-sm-3">
+                <strong>Address</strong>
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.Address)
+            </dd>
+        </dl>
+    </div>
 </div>
+
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.User.UserId">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+    <a class="btn btn-primary" asp-page="./Edit" asp-route-id="@Model.User.UserId">Edit</a>
+    <a class="btn btn-secondary" asp-page="./Index">Back to List</a>
 </div>
