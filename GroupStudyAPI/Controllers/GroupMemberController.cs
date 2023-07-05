@@ -148,6 +148,13 @@ namespace GroupStudyAPI.Controllers
 
             return CreatedAtAction(nameof(GetTaskById), new { id = task.TaskId }, task);
         }
+        [HttpGet("GetAllTasks")]
+        public IActionResult GetAllTasks()
+        {
+            var tasks = _taskRepository.GetTasks();
+            return Ok(tasks);
+        }
+
 
         [HttpGet("GetTaskById/{id}")]
         public IActionResult GetTaskById(int id)

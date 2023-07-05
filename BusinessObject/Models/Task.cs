@@ -16,5 +16,10 @@ namespace BusinessObject.Models
         public string Status { get; set; }
         public virtual User AssignedToUser { get; set; }
         public virtual Group Group { get; set; }
+
+        public static implicit operator List<object>(Task v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
