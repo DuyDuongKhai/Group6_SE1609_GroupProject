@@ -39,7 +39,7 @@ namespace GroupStudyClient.Pages
             var httpClient = _clientFactory.CreateClient(); 
 
             // Send login request to the API
-            var response = await httpClient.PostAsJsonAsync("https://localhost:44340/api/Auth/Login", Input);
+            var response = await httpClient.PostAsJsonAsync("https://localhost:5001/api/Auth/Login", Input);
 
             if (response.IsSuccessStatusCode)
             {
@@ -66,6 +66,7 @@ namespace GroupStudyClient.Pages
                             HttpContext.Session.SetString("Token", token);
                             HttpContext.Session.SetString("Role", roleClaim.Value);
                             HttpContext.Session.SetString("UserId", userIdClaim.Value);
+                           
 
                             if (roleClaim.Value == "User")
                             {
