@@ -1,4 +1,5 @@
 ﻿@page
+@using Microsoft.AspNetCore.Http
 @model GroupStudyClient.Pages.GroupMember.CreateCommentModel
 <!DOCTYPE html>
 <html>
@@ -97,7 +98,7 @@
 <form method="post">
     <div class="form-group">
         <label for="userId">User ID:</label>
-        <input type="number" class="form-control" id="userId" name="CommentDto.UserId" asp-for="CommentDto.UserId" />
+            <input type="text" class="form-control" id="userId" name="UserId" asp-for="CommentDto.UserId" value="@HttpContext.Session.GetString("UserId")" />
     </div>
     <div class="form-group">
         <label for="content">Content:</label>
