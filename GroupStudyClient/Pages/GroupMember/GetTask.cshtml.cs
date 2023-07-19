@@ -20,7 +20,7 @@ namespace GroupStudyClient.Pages.GroupMember
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var response = await _httpClient.GetAsync("https://localhost:5001/api/GroupMember/GetAllTasks");
+            var response = await _httpClient.GetAsync("https://localhost:44340/api/GroupMember/GetAllTasks");
 
             if (response.IsSuccessStatusCode)
             {

@@ -28,7 +28,7 @@ namespace GroupStudyClient.Pages.GroupMember
                 return Page();
             }
 
-            var apiUrl = $"https://localhost:5001/api/GroupMember/{postId}/comments";
+            var apiUrl = $"https://localhost:44340/api/GroupMember/{postId}/comments";
             var httpClient = new HttpClient();
             var response = await httpClient.PostAsJsonAsync(apiUrl, CommentDto);
 

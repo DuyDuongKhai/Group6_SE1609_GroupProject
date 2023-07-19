@@ -30,7 +30,7 @@ namespace GroupStudyClient.Pages.GroupMember
                 return Page();
             }
 
-            var apiUrl = "https://localhost:5001/api/GroupMember/CreatePost";
+            var apiUrl = "https://localhost:44340/api/GroupMember/CreatePost";
             var httpClient = new HttpClient();
             var response = await httpClient.PostAsJsonAsync(apiUrl, PostDto);
 

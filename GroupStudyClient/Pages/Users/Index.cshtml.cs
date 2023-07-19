@@ -116,5 +116,6 @@ namespace GroupStudyClient.Pages.Users
 
             return RedirectToPage();
         }
+
     }
 }
