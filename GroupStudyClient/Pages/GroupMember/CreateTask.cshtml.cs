@@ -30,7 +30,7 @@ namespace GroupStudyClient.Pages.GroupMember
             var jsonTask = JsonConvert.SerializeObject(TaskDto);
             var content = new StringContent(jsonTask, Encoding.UTF8, "application/json");
 
-            var response = await _httpClient.PostAsync("https://localhost:5001/api/GroupMember/CreateTask", content);
+            var response = await _httpClient.PostAsync("https://localhost:44340/api/GroupMember/CreateTask", content);
 
             if (response.IsSuccessStatusCode)
             {

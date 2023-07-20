@@ -21,7 +21,7 @@ namespace GroupStudyClient.Pages.GroupMember
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var apiUrl = "https://localhost:5001/api/GroupMember/GetAllComments";
+            var apiUrl = "https://localhost:44340/api/GroupMember/GetAllComments";
             var response = await _httpClient.GetAsync(apiUrl);
 
             if (response.IsSuccessStatusCode)

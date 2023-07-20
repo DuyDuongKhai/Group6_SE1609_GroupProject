@@ -1,5 +1,10 @@
 ﻿@page
+@using Microsoft.AspNetCore.Http;
 @model GroupStudyClient.Pages.Users.IndexModel
+@{
+                var userId = int.Parse(HttpContext.Session.GetString("UserId"));
+
+}
 <!DOCTYPE html>
 <html>
 <head>
@@ -114,19 +119,39 @@
                             <p class="card-text">Group Admin: @group.GroupAdminId</p>
                             <p class="card-text">Created At: @group.CreatedAt</p>
                             <p class="card-text">Description: @group.Description</p>
-                            @if (group.JoinRequests.Any(jr => jr.UserId == Model.UserId && jr.GroupId == group.GroupId))
+
+                            @if (group.GroupMembers.Any(gm => gm.UserId == userId)) // Kiểm tra người dùng đã tham gia nhóm
                             {
-                                <button type="button" class="btn btn-primary" disabled="disabled">Join Request Sent</button>
-                            }
-                            else
-                            {
-                                <form method="post" asp-page-handler="JoinGroup" asp-route-userId="@Model.UserId" asp-route-groupId="@group.GroupId">
+                                <p class="card-text">You are already a member of this group.</p>
+                                <form method="post" asp-page="/GroupMember/Index" asp-page-handler="JoinGroup" asp-route-userId="@Model.UserId" asp-route-groupId="@group.GroupId">
                                     <button type="submit" class="btn btn-primary">Join Group</button>
                                 </form>
                             }
+                            else
+                            {   
+                                @if (group.JoinRequests.Any(jr => jr.UserId == userId && jr.GroupId == group.GroupId).Equals("Approved"))
+                                {
+                                    <button type="button" class="btn btn-primary" disabled="disabled">Join Request Sent</button>
+                                }
+                                else
+                                {
+                                    <form method="post" asp-page-handler="JoinGroup" asp-route-userId="@Model.UserId" asp-route-groupId="@group.GroupId">
+                                        <button type="submit" class="btn btn-primary">Join Group</button>
+                                    </form>
+                                }
+                            }
                         </div>
                     </div>
-                </div>
+
+
+
+                   
+
+
+
+
+                    </div>
+
             }
         </div>
     }
@@ -149,5 +174,7 @@
             @TempData["ErrorMessage"]
         </div>
     }
+
+   
 </body>
 </html>

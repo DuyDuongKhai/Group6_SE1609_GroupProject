@@ -22,7 +22,7 @@ namespace GroupStudyClient.Pages.GroupMember
 
         public async Task<IActionResult> OnGet()
         {
-            var apiUrl = "https://localhost:5001/api/GroupMember/GetAllPosts";
+            var apiUrl = "https://localhost:44340/api/GroupMember/GetAllPosts";
             var httpClient = new HttpClient();
             var response = await httpClient.GetAsync(apiUrl);
 
