@@ -36,7 +36,7 @@ namespace GroupStudyClient.Pages
                 return Page();
             }
 
-            var httpClient = _clientFactory.CreateClient(); 
+            var httpClient = _clientFactory.CreateClient();
 
             // Send login request to the API
             var response = await httpClient.PostAsJsonAsync("https://localhost:5001/api/Auth/Login", Input);

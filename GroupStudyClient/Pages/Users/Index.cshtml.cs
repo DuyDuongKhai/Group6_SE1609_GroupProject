@@ -36,7 +36,7 @@ namespace GroupStudyClient.Pages.Users
                 return RedirectToPage("/Index");
             }
 
-            var apiUrlWithUserId = $"https://localhost:44340/api/User/{userId}";
+            var apiUrlWithUserId = $"https://localhost:5001/api/User/{userId}";
 
             var httpClient = _clientFactory.CreateClient();
             var response = await httpClient.GetAsync(apiUrlWithUserId);
@@ -55,7 +55,7 @@ namespace GroupStudyClient.Pages.Users
             if (string.IsNullOrEmpty(Keyword))
             {
                 // Lấy danh sách tất cả các nhóm
-                var groupResponse = await httpClient.GetAsync("https://localhost:44340/api/Groups");
+                var groupResponse = await httpClient.GetAsync("https://localhost:5001/api/Groups");
 
                 if (groupResponse.IsSuccessStatusCode)
                 {
@@ -70,7 +70,7 @@ namespace GroupStudyClient.Pages.Users
             else
             {
                 // Tìm kiếm nhóm dựa trên từ khóa
-                var searchResponse = await httpClient.GetAsync($"https://localhost:44340/api/User/search/{Keyword}");
+                var searchResponse = await httpClient.GetAsync($"https://localhost:5001/api/User/search/{Keyword}");
 
                 if (searchResponse.IsSuccessStatusCode)
                 {
@@ -98,7 +98,7 @@ namespace GroupStudyClient.Pages.Users
             }
 
             var httpClient = _clientFactory.CreateClient();
-            var response = await httpClient.PostAsync($"https://localhost:44340/api/User/{userId}/groups/{groupId}/join", null);
+            var response = await httpClient.PostAsync($"https://localhost:5001/api/User/{userId}/groups/{groupId}/join", null);
 
             if (response.IsSuccessStatusCode)
             {
