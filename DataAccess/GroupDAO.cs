@@ -18,7 +18,8 @@ namespace DataAccess
                 using (var context = new GroupStudyContext())
                 {
                     listGroups = context.Groups
-                       .Include(x=>x.GroupAdmin) 
+                       .Include(x=>x.GroupAdmin)
+                       .Include(x=>x.GroupMembers)
                        .ToList();
                 }
             }
