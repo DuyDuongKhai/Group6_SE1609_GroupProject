@@ -4,6 +4,7 @@ using System.Text;
 using BusinessObject.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess
 {
@@ -46,20 +47,20 @@ namespace DataAccess
         public static List<User> GetMemberFromGroup(int Id)
         {
             List<User> list=new List<User>();
-            var group = FindGroupMemberById(Id);
             try
             {
                 using (var context = new GroupStudyContext())
                 {
                     list = context.GroupMembers
-                .Where(gm => gm.GroupId == group.GroupId && gm.User != null)
+                .Where(gm => gm.GroupId == Id && gm.User != null)
+                .Include(x=>x.Group)
                 .Select(gm => gm.User)
                 .ToList();
 
                 }
                 if(list.Count==0)
                 {
-                    throw new Exception($"No user is in the {group.Group.GroupName}");
+                    throw new Exception($"No user is in the group");
                 }
             }
             catch (Exception ex)

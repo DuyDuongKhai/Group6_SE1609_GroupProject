@@ -55,6 +55,7 @@ namespace DataAccess
                     posts = context.Posts
                         .Include(x=>x.Group)
                         .Include(x=>x.User)
+                        .Include(x=>x.Comments)
                         .Where(x=>x.GroupId== groupId).ToList();
                 }
                 if(posts.Count()==0)
@@ -129,8 +130,32 @@ namespace DataAccess
             {
                 using (var context = new GroupStudyContext())
                 {
-                    var c1 = context.Posts.SingleOrDefault(u => u.PostId == c.PostId);
+                    var c1 = context.Posts
+                        .SingleOrDefault(u => u.PostId == c.PostId);
+                    DeleteComment(c1.PostId);
                     context.Posts.Remove(c1);
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+        private static void DeleteComment(int postId)
+        {
+            try
+            {
+                using (var context = new GroupStudyContext())
+                {
+                    var c1 = context.Comments
+                        .Where(u => u.PostId == postId)
+                        .ToList();
+
+                    foreach(var comment in c1)
+                    {
+                        context.Comments.Remove(comment);
+                    }
                     context.SaveChanges();
                 }
             }

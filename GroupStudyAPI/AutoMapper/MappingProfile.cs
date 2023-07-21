@@ -20,6 +20,8 @@ namespace GroupStudyAPI.AutoMapper
             CreateMap<Post, PostModel>().ReverseMap()
             .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.Group))
            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User))
+           .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments))
+
            ;
 
             CreateMap<Task, TaskModel>().ReverseMap()

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
@@ -237,6 +237,11 @@ namespace BusinessObject.Models
                     .WithMany(p => p.Posts)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("FK__Posts__UserID__403A8C7D");
+
+              
+
+
+
             });
 
             modelBuilder.Entity<Task>(entity =>
@@ -308,6 +313,7 @@ namespace BusinessObject.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
             });
+
 
             OnModelCreatingPartial(modelBuilder);
         }
