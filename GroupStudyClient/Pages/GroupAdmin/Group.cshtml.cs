@@ -35,6 +35,7 @@ namespace GroupStudyClient.Pages.GroupAdmin
         {
             string groupMemberUrl = $"https://localhost:44340/api/GroupAdmin/GetGroupMember/{GroupId}";
             string GroupPostUrl = $"https://localhost:44340/api/GroupAdmin/GroupPosts/{GroupId}";
+            string GroupCommentUrl = "";
 
             HttpContext.Session.SetString("GroupId", GroupId.ToString());
             var httpClient = _clientFactory.CreateClient();
@@ -70,6 +71,24 @@ namespace GroupStudyClient.Pages.GroupAdmin
             {
                 TempData["Message"] = content.ToString();
             }else
+            {
+                TempData["ErrorMessage"] = content.ToString();
+
+            }
+
+            return await OnPostGroupMemberAsync(GroupId);
+        }
+        public async Task<IActionResult> OnPostRemovePostAsync([FromQuery] int GroupId, int PostId)
+        {
+            string removePosturl = $"https://localhost:44340/api/GroupAdmin/DeletePost/{PostId}";
+            var httpClient = _clientFactory.CreateClient();
+            var response = await httpClient.DeleteAsync(removePosturl);
+            var content = await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["Message"] = content.ToString();
+            }
+            else
             {
                 TempData["ErrorMessage"] = content.ToString();
 

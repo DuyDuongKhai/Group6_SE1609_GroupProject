@@ -17,5 +17,7 @@ namespace BusinessObject.Sub_Model
 
         public virtual GroupModel Group { get; set; }
         public virtual UserModel User { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+
     }
 }

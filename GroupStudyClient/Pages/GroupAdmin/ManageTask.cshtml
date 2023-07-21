@@ -50,17 +50,17 @@
                     progressPercentage = 0;
                     progressText = "Assigned";
                     break;
-                case "Ongoing":
+                case "In Progress":
                     progressPercentage = 50;
-                    progressText = "Ongoing";
+                    progressText = "In Progress";
                     break;
-                case "Done":
+                case "Completed":
                     progressPercentage = 100;
-                    progressText = "Done";
+                    progressText = "Completed";
                     break;
                 default:
                     progressPercentage = 0;
-                    progressText = "Unknown";
+                    progressText = "Canceled";
                     break;
             }
             <tr>
@@ -82,11 +82,7 @@
                         <div class="progress-bar" role="progressbar" style="width: @progressPercentage%;" aria-valuenow="@progressPercentage" aria-valuemin="0" aria-valuemax="100">@progressText</div>
                     </div>
                 </td>
-                <td>
-                    <a asp-page="./Edit" asp-route-id="@item.GroupId">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.GroupId">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.GroupId">Delete</a>
-                </td>
+             
             </tr>
         }
     </tbody>

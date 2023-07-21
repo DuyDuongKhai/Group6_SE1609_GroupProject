@@ -32,8 +32,8 @@
 }
 
 body{
-  background:@bgcolor;
-  font-family: 'Poppins', sans-serif;
+            background-image: radial-gradient(circle, rgba(37,52,97,1) 0%, rgba(20,28,51,1) 100%);
+            font-family: 'Poppins', sans-serif;
 }
 .big-heading{
   color:#fff;
@@ -206,7 +206,11 @@ h4{
                             <a class="nav-link text-dark" asp-area="" asp-page="/Index">Manage Post</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Manage Task</a>
+                            <a class="nav-link text-dark" asp-page="/GroupAdmin/ManageTask">Manage Task</a>
+
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white btn btn-primary" asp-area="" asp-page="/Login">Log out</a>
                         </li>
                     </ul>
                 </div>
