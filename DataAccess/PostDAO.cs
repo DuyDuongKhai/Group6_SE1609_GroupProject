@@ -68,6 +68,31 @@ namespace DataAccess
             return posts;
         }
 
+        public static List<Post> GetPostsByGroupId(int groupId)
+        {
+            if (groupId <= 0)
+            {
+                throw new ArgumentException("Invalid groupId. The groupId must be greater than 0.");
+            }
+
+            List<Post> listPosts = new List<Post>();
+            try
+            {
+                using (var context = new GroupStudyContext())
+                {
+                    listPosts = context.Posts
+                        .Where(x => x.GroupId == groupId)
+                        .ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return listPosts;
+        }
+
+
         public static void SavePost(Post c)
         {
             try

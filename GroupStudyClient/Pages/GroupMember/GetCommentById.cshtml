@@ -6,6 +6,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Get Comment</title>
+    <!-- Thêm các liên kết CSS của Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
     <style>
         body {
             background-image: radial-gradient(circle, rgba(37,52,97,1) 0%, rgba(20,28,51,1) 100%);
@@ -29,10 +32,12 @@
             margin-top: 16px;
         }
 
-        table {
+        .comment-table {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 20px;
             margin-top: 16px;
-            border-collapse: collapse;
-            width: 100%;
         }
 
         th, td {
@@ -73,36 +78,43 @@
 <body>
     <h1>Comment Details</h1>
 
-    <div class="form">
-        @if (Model.Comments != null && Model.Comments.Count > 0)
-        {
-            <h2>Comment Information</h2>
-            <table class="comment-table">
-                <thead>
-                    <tr>
-                        <th>Comment ID</th>
-                        <th>Post ID</th>
-                        <th>User ID</th>
-                        <th>Content</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var comment in Model.Comments)
-                    {
-                        <tr>
-                            <td>@comment.CommentId</td>
-                            <td>@comment.PostId</td>
-                            <td>@comment.UserId</td>
-                            <td>@comment.Content</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <p>Comment not found.</p>
-        }
+    <div class="container">
+        <div class="form">
+            @if (Model.Comments != null && Model.Comments.Count > 0)
+            {
+                <div class="comment-table">
+                    <h2>Comment Information</h2>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Comment ID</th>
+                                <th>Post ID</th>
+                                <th>User ID</th>
+                                <th>Content</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var comment in Model.Comments)
+                            {
+                                <tr>
+                                    <td>@comment.CommentId</td>
+                                    <td>@comment.PostId</td>
+                                    <td>@comment.UserId</td>
+                                    <td>@comment.Content</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p>Comment not found.</p>
+            }
+        </div>
     </div>
+
+    <!-- Thêm các liên kết JS của Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-KyZXEAg3QhqLMpG8r+2ELBYktHIDKpB7mFzo1UcNMtvzkOr3K8KSxFzjZROM78y" crossorigin="anonymous"></script>
 </body>
 </html>

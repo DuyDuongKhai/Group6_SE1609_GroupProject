@@ -77,12 +77,12 @@
     <div class="container">
         <div class="content">
             <h1>Welcome to the Group Member Index page</h1>
-
             <div class="button-container">
                 <a class="button" asp-page="/GroupMember/CreatePost">Create a new post</a>
-                <a class="button" asp-page="/GroupMember/GetPost">View all Posts</a>
-                <a class="button" asp-page="/GroupMember/GetTask">View Tasks</a>
+                <a class="button" asp-page="/GroupMember/GetPost" asp-route-groupId="@Request.Query["groupId"]">View all Posts</a>
+                <a class="button" asp-page="/GroupMember/GetTask" asp-route-groupId="@Request.Query["groupId"]" asp-route-userId="@Request.Query["userId"]">View Tasks</a>
             </div>
+
         </div>
     </div>
 

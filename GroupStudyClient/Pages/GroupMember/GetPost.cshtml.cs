@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace GroupStudyClient.Pages.GroupMember
 {
@@ -17,12 +18,11 @@ namespace GroupStudyClient.Pages.GroupMember
         {
             _httpClient = httpClient;
         }
-
         public Post Post { get; set; }
 
-        public async Task<IActionResult> OnGet()
+        public async Task<IActionResult> OnGet(int groupId)
         {
-            var apiUrl = "https://localhost:44340/api/GroupMember/GetAllPosts";
+            var apiUrl = $"https://localhost:44340/api/GroupMember/GetAllPostsByGroupId/{groupId}";
             var httpClient = new HttpClient();
             var response = await httpClient.GetAsync(apiUrl);
 

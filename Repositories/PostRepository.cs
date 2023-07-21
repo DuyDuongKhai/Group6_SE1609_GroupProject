@@ -23,5 +23,6 @@ namespace Repositories
         public List<Post> GetPosts() => PostDAO.GetPosts();
         public List<Post> GetPostByGroupId(int groupId) => PostDAO.GetPostByGroupId(groupId);
 
+        public List<Post> GetPostsByGroupId(int groupId) => PostDAO.GetPostsByGroupId(groupId);
     }
 }
