@@ -117,6 +117,20 @@ namespace DataAccess
                 using (var context = new GroupStudyContext())
                 {
                     var c1 = context.Groups.SingleOrDefault(u => u.GroupId == c.GroupId);
+                    var groupMembers = context.GroupMembers.Where(m => m.GroupId == c1.GroupId).ToList();
+                    var joinRequests = context.JoinRequests.Where(m => m.GroupId == c1.GroupId).ToList();
+                    var posts = context.Posts.Where(m => m.GroupId == c1.GroupId).ToList();
+                    var chatMessages = context.ChatMessages.Where(m => m.GroupId == c1.GroupId).ToList();
+                    var tasks = context.Tasks.Where(m => m.GroupId == c1.GroupId).ToList();
+                    var comments = context.Comments.Where(m => posts.Contains(context.Posts.SingleOrDefault(p => p.PostId == m.PostId))).ToList();
+
+
+                    context.Comments.RemoveRange(comments);
+                    context.GroupMembers.RemoveRange(groupMembers);
+                    context.JoinRequests.RemoveRange(c1.JoinRequests);
+                    context.Posts.RemoveRange(c1.Posts);
+                    context.ChatMessages.RemoveRange(c1.ChatMessages);
+                    context.Tasks.RemoveRange(c1.Tasks);
                     context.Groups.Remove(c1);
                     context.SaveChanges();
                 }
