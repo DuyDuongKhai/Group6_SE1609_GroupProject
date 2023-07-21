@@ -18,5 +18,6 @@ namespace Repositories
         List<Group> GetGroups();
         List<Post> GetPosts();
         List<Post> GetPostByGroupId(int groupId);
+        List<Post> GetPostsByGroupId(int groupId);
     }
 }

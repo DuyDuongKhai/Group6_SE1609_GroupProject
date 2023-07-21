@@ -1,6 +1,7 @@
 ﻿using BusinessObject.Models;
 using DataAccess;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Host;
 using Repositories;
 using System;
 using System.Collections.Generic;
@@ -287,6 +288,75 @@ namespace GroupStudyAPI.Controllers
 
             return Ok(posts);
         }
+        [HttpGet("GetAllPostsByGroupId/{groupId}")]
+        public IActionResult GetAllPostsByGroupId(int groupId)
+        {
+            try
+            {
+                var posts = _postRepository.GetPostsByGroupId(groupId);
+
+                if (posts == null || posts.Count == 0)
+                {
+                    return NotFound(); // Trả về NotFound nếu không tìm thấy bài viết trong nhóm
+                }
+
+                return Ok(posts); // Trả về danh sách bài viết nếu tìm thấy
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message); // Trả về BadRequest nếu groupId không hợp lệ
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred: " + ex.Message); // Trả về lỗi server nếu có lỗi xảy ra
+            }
+        }
+        [HttpGet("GetTaskByUserId/{userId}")]
+        public ActionResult<IEnumerable<Task>> GetTasksByUserId(int userId)
+        {
+            try
+            {
+                var tasks = TaskDAO.GetListTaskByUserId(userId);
+                if (tasks.Count > 0)
+                {
+                    return Ok(tasks);
+                }
+                else
+                {
+                    return NotFound(); // Trả về mã lỗi 404 nếu không tìm thấy công việc nào cho userId cung cấp
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message); // Trả về mã lỗi 400 nếu có lỗi xảy ra trong quá trình xử lý yêu cầu
+            }
+        }
+
+        [HttpPut("UpdateTaskStatus/{taskId}")]
+        public IActionResult UpdateTaskStatus(int taskId, [FromBody] string newStatus)
+        {
+            try
+            {
+                var task = TaskDAO.FindTaskById(taskId);
+                if (task == null)
+                {
+                    return NotFound(); // Trả về mã lỗi 404 nếu không tìm thấy công việc
+                }
+
+                // Cập nhật trạng thái mới cho công việc
+                task.Status = newStatus;
+                TaskDAO.UpdateTask(task);
+
+                return Ok(); // Trả về mã lỗi 200 nếu cập nhật thành công
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message); // Trả về mã lỗi 400 nếu có lỗi xảy ra trong quá trình xử lý yêu cầu
+            }
+        }
+
+
+
 
     }
 }

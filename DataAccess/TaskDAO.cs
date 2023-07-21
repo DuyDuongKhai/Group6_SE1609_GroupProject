@@ -162,6 +162,21 @@ namespace DataAccess
             return new List<Task>();
 
         }
+        public static List<Task> GetListTaskByUserId(int userId)
+        {
+            var list = new List<Task>();
+
+            using (var context = new GroupStudyContext())
+            {
+                list = context.Tasks
+                    .Include(x => x.Group)
+                    .Include(x => x.AssignedToUser)
+                    .Where(x => x.AssignedToUserId == userId)
+                    .ToList();
+            }
+
+            return list;
+        }
 
     }
 }

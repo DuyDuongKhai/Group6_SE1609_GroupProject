@@ -33,7 +33,7 @@ namespace GroupStudyClient.Pages
             var httpClient = _clientFactory.CreateClient();
 
             // Send registration request to the API
-            var response = await httpClient.PostAsJsonAsync("https://localhost:5001/api/Auth/Register", Input);
+            var response = await httpClient.PostAsJsonAsync("https://localhost:44340/api/Auth/Register", Input);
 
             if (response.IsSuccessStatusCode)
             {

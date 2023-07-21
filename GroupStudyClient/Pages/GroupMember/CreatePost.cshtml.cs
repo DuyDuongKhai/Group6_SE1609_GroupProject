@@ -10,8 +10,6 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Text;
 
-
-
 namespace GroupStudyClient.Pages.GroupMember
 {
     public class CreatePostModel : PageModel
@@ -37,12 +35,15 @@ namespace GroupStudyClient.Pages.GroupMember
             if (response.IsSuccessStatusCode)
             {
                 var createdPost = await response.Content.ReadFromJsonAsync<Post>();
-                // Handle the created post if needed
-                return RedirectToPage("GetPost", new { id = createdPost.PostId });
+                // Xử lý bài viết đã tạo nếu cần thiết
+
+                // Đặt thông báo thành công vào TempData
+                TempData["SuccessMessage"] = "Bài viết đã được tạo thành công!";
+                return Page(); // Hiển thị thông báo thành công mà không chuyển trang
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Error creating post.");
+                ModelState.AddModelError(string.Empty, "Lỗi khi tạo bài viết.");
                 return Page();
             }
         }
