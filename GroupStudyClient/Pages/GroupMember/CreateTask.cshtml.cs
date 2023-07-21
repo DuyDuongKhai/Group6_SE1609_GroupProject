@@ -35,7 +35,7 @@ namespace GroupStudyClient.Pages.GroupMember
             if (response.IsSuccessStatusCode)
             {
                 // Thành công
-                return RedirectToPage("/GroupMember/GetTask");  // Chuyển hướng người dùng đến trang Index (danh sách công việc)
+                return RedirectToPage("/GroupMember/GetTask");  
             }
             else
             {

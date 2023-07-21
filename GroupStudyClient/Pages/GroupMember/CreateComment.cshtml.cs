@@ -35,7 +35,7 @@ namespace GroupStudyClient.Pages.GroupMember
             if (response.IsSuccessStatusCode)
             {
                 var createdComment = await response.Content.ReadFromJsonAsync<Comment>();
-                // Handle the created comment if needed
+                
                 return RedirectToPage("GetCommentById", new { id = createdComment.PostId });
             }
             else

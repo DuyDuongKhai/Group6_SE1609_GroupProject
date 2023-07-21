@@ -64,6 +64,16 @@
                 color: #FFA500;
             }
 
+        .btn-viewComment {
+            color: #B16E4B;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+            .btn-viewComment:hover {
+                color: #B16E4B;
+            }
+
         .no-posts {
             text-align: center;
             font-weight: bold;
@@ -85,12 +95,15 @@
                         <div class="post-card">
                             <h5 class="card-title"><span class="post-id">Post ID: @post.PostId</span></h5>
                             <div class="post-id-group-id-user-id">
-                                <p>Group ID: @post.GroupId | User ID: @post.UserId</p>
+                                <p>Group ID: @post.GroupId | User ID: @post.UserId | @post.CreatedAt</p>
                             </div>
                             <div class="post-details">
                                 <p><strong>Content:</strong> @post.Content</p>
                             </div>
                             <a class="btn-comment" href="/GroupMember/CreateComment?postId=@post.PostId">Comment</a>
+                            <a class="btn-viewComment" href="/GroupMember/GetCommentById?id=@post.PostId">View Comment</a>
+                            <!-- Thẻ div để chứa danh sách bình luận -->
+                            <div class="comment-list" style="display: none;"></div>
                         </div>
                     </div>
                 }
@@ -98,7 +111,7 @@
         }
         else
         {
-            <p class="no-posts">No posts found.</p>
+            <p class="no-posts">Không tìm thấy bài đăng nào.</p>
         }
     </div>
 

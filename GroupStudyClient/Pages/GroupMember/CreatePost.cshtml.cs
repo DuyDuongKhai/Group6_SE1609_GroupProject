@@ -35,11 +35,11 @@ namespace GroupStudyClient.Pages.GroupMember
             if (response.IsSuccessStatusCode)
             {
                 var createdPost = await response.Content.ReadFromJsonAsync<Post>();
-                // Xử lý bài viết đã tạo nếu cần thiết
+                
 
-                // Đặt thông báo thành công vào TempData
+                
                 TempData["SuccessMessage"] = "Bài viết đã được tạo thành công!";
-                return Page(); // Hiển thị thông báo thành công mà không chuyển trang
+                return Page(); 
             }
             else
             {
