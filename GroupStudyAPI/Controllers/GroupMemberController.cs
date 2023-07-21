@@ -41,10 +41,13 @@ namespace GroupStudyAPI.Controllers
 
             var post = new Post
             {
+                
                 PostId = _postRepository.GetPosts().Count + 1,
                 GroupId = postDto.GroupId,
                 UserId = postDto.UserId,
-                Content = postDto.Content
+                Content = postDto.Content,
+                CreatedAt = DateTime.UtcNow,
+               
             };
 
             _postRepository.SavePost(post);
