@@ -15,6 +15,8 @@ namespace GroupStudyAPI.Controllers
     public class GroupsController : ControllerBase
     {
         private IGroupRepository _groupRepository = new GroupRepository();
+        private IUserRepository _userRepository = new UserRepository();
+
 
 
         public GroupsController()
@@ -62,6 +64,9 @@ namespace GroupStudyAPI.Controllers
 
                 try
                 {
+                    group.GroupAdmin = _userRepository.GetUserByEmail(group.GroupAdmin.Email);
+                    group.GroupAdminId = _userRepository.GetUserByEmail(group.GroupAdmin.Email).UserId;
+
                     _groupRepository.UpdateGroup(group);
                 }
                 catch (Exception ex)

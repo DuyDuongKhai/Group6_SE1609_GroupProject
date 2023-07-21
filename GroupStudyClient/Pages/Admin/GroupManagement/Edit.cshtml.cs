@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using BusinessObject.Models;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text;
 
 namespace GroupStudyClient.Pages.Admin.GroupManagement
 {
@@ -48,6 +49,40 @@ namespace GroupStudyClient.Pages.Admin.GroupManagement
 
 
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            var httpClient = _clientFactory.CreateClient();
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            var jsonContent = JsonSerializer.Serialize(Group);
+            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+
+
+
+            HttpResponseMessage response = await httpClient.PutAsync($"https://localhost:44340/api/Groups/{Group.GroupId}\r\n", content);
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["IsCreateSuccess"] = true; // Set the success flag in TempData
+                TempData["SuccessMesssages"] = "Edit group success";
+                // The flowerBouquet data was successfully updated, handle the success as needed
+                return RedirectToPage("/Admin/GroupManagement/Index");
+            }
+            else
+            {
+                // Handle error if needed
+                ModelState.AddModelError(string.Empty, "An error occurred while updating the user.");
+                return Page();
+            }
+
+
+
+
         }
 
         //public async Task<IActionResult> OnGetAsync(int? id)

@@ -65,6 +65,8 @@ namespace GroupStudyClient.Pages.Admin.UserManagement
             HttpResponseMessage response = await httpClient.DeleteAsync($"https://localhost:44340/api/Users/{User.UserId}\r\n");
             if (response.IsSuccessStatusCode)
             {
+                TempData["IsCreateSuccess"] = true; // Set the success flag in TempData
+                TempData["SuccessMesssages"] = "Delete user success";
                 // The flowerBouquet data was successfully updated, handle the success as needed
                 return RedirectToPage("/Admin/UserManagement/Index");
             }

@@ -67,15 +67,18 @@ namespace GroupStudyClient.Pages.Admin.GroupManagement
             HttpResponseMessage response = await httpClient.PostAsync($"https://localhost:44340/api/Groups", content);
             if (response.IsSuccessStatusCode)
             {
-                // The flowerBouquet data was successfully updated, handle the success as needed
+                // The group data was successfully created
+                TempData["IsCreateSuccess"] = true; // Set the success flag in TempData
+                TempData["SuccessMesssages"] = "Create group success";
                 return RedirectToPage("/Admin/GroupManagement/Index");
             }
             else
             {
                 // Handle error if needed
-                ModelState.AddModelError(string.Empty, "An error occurred while create group admin.");
+                ModelState.AddModelError(string.Empty, "An error occurred while creating the group.");
                 return Page();
             }
         }
+
     }
 }

@@ -65,6 +65,8 @@ namespace GroupStudyClient.Pages.Admin.GroupManagement
             HttpResponseMessage response = await httpClient.DeleteAsync($"https://localhost:44340/api/Groups/{Group.GroupId}\r\n");
             if (response.IsSuccessStatusCode)
             {
+                TempData["IsCreateSuccess"] = true; // Set the success flag in TempData
+                TempData["SuccessMesssages"] = "Delete group success";
                 // The flowerBouquet data was successfully updated, handle the success as needed
                 return RedirectToPage("/Admin/GroupManagement/Index");
             }

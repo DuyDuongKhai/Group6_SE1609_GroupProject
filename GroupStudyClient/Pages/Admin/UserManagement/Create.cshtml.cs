@@ -52,6 +52,8 @@ namespace GroupStudyClient.Pages.Admin.UserManagement
             HttpResponseMessage response = await httpClient.PostAsync($"https://localhost:44340/api/Users", content);
             if (response.IsSuccessStatusCode)
             {
+                TempData["IsCreateSuccess"] = true; // Set the success flag in TempData
+                TempData["SuccessMesssages"] = "Create user success";
                 // The flowerBouquet data was successfully updated, handle the success as needed
                 return RedirectToPage("/Admin/UserManagement/Index");
             }
